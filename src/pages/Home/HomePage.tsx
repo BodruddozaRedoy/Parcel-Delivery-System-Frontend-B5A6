@@ -1,7 +1,16 @@
 import React from 'react'
+import Hero from './components/Hero'
+import Features from './components/Features'
+import HowItWorks from './components/HowItWorks'
+import Pricing from './components/Pricing'
 
 export default function HomePage() {
   return (
-    <div>HomePage</div>
+    <div>
+        <Hero/>
+        <Features/>
+        <HowItWorks/>
+        <Pricing/>
+    </div>
   )
 }
