@@ -1,47 +1,119 @@
-import { Button } from '@/components/ui/button'
-import { Menu, Package } from 'lucide-react'
-import React from 'react'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Menu, Package, X } from "lucide-react"
+import { Link, useLocation } from "react-router"
+
+// Separate pages
+const pageLinks = [
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/contact", label: "Contact" },
+]
+
+// Landing page sections
+const sectionLinks = [
+  { path: "#services", label: "Services" },
+  { path: "#how-it-works", label: "How It Works" },
+  { path: "#pricing", label: "Pricing" },
+]
 
 export default function Navbar() {
-    return (
-        <div>
-            <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
-                <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                        <Package className="h-8 w-8 text-primary" />
-                        <span className="text-2xl font-bold gradient-hero bg-clip-text text-transparent">
-                            SwiftShip
-                        </span>
-                    </div>
+  const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
 
-                    <nav className="hidden md:flex items-center space-x-6">
-                        <a href="#services" className="text-foreground hover:text-primary transition-smooth">
-                            Services
-                        </a>
-                        <a href="#how-it-works" className="text-foreground hover:text-primary transition-smooth">
-                            How It Works
-                        </a>
-                        <a href="#pricing" className="text-foreground hover:text-primary transition-smooth">
-                            Pricing
-                        </a>
-                        <a href="#contact" className="text-foreground hover:text-primary transition-smooth">
-                            Contact
-                        </a>
-                    </nav>
+  // Only show section links if we are on the home page
+  const isHomePage = location.pathname === "/"
 
-                    <div className="flex items-center space-x-3">
-                        <Button variant="ghost" className="hidden md:inline-flex">
-                            Sign In
-                        </Button>
-                        <Button className="gradient-hero hover-glow">
-                            Get Started
-                        </Button>
-                        <Button variant="ghost" size="icon" className="md:hidden">
-                            <Menu className="h-5 w-5" />
-                        </Button>
-                    </div>
-                </div>
-            </header>
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <div className="flex items-center space-x-2">
+          <Package className="h-8 w-8 text-primary" />
+          <span className="text-2xl font-bold gradient-hero bg-clip-text text-transparent">
+            SwiftShip
+          </span>
         </div>
-    )
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {pageLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className="text-foreground hover:text-primary transition-smooth"
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {isHomePage &&
+            sectionLinks.map((link) => (
+              <a
+                key={link.path}
+                href={link.path}
+                className="text-foreground hover:text-primary transition-smooth"
+              >
+                {link.label}
+              </a>
+            ))}
+        </nav>
+
+        {/* Buttons */}
+        <div className="flex items-center space-x-3">
+          <Button variant="ghost" className="hidden md:inline-flex">
+            Sign In
+          </Button>
+          <Button className="gradient-hero hover-glow">Get Started</Button>
+
+          {/* Mobile menu toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Nav */}
+      {isOpen && (
+        <div className="md:hidden bg-background/95 backdrop-blur-sm border-t">
+          <nav className="flex flex-col space-y-4 px-4 py-6">
+            {pageLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="text-foreground hover:text-primary transition-smooth"
+                onClick={() => setIsOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {isHomePage &&
+              sectionLinks.map((link) => (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  className="text-foreground hover:text-primary transition-smooth"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
+
+            <Button variant="ghost" className="w-full">
+              Sign In
+            </Button>
+            <Button className="gradient-hero hover-glow w-full">
+              Get Started
+            </Button>
+          </nav>
+        </div>
+      )}
+    </header>
+  )
 }

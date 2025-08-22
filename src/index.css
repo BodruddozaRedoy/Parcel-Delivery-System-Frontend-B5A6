@@ -116,5 +116,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    scroll-behavior: smooth;
   }
+  .gradient-hero {
+  background: linear-gradient(to right, #2563eb, #9333ea); /* blue → purple */
+}
+
 }
