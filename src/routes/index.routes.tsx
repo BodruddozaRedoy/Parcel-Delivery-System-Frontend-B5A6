@@ -1,6 +1,7 @@
 import MainLayout from "@/layouts/MainLayout";
 import AboutPage from "@/pages/About/AboutPage";
 import ContactPage from "@/pages/Contact/ContactPage";
+import DashboardPage from "@/pages/Dashboard/DasboardPage";
 import HomePage from "@/pages/Home/HomePage";
 import LoginPage from "@/pages/Login/LoginPage";
 import RegisterPage from "@/pages/Register/RegisterPage";
@@ -32,5 +33,9 @@ export const router = createBrowserRouter([
     {
         path: "/register",
         Component: RegisterPage
+    },
+    {
+        path:"/dashboard",
+        Component: DashboardPage
     }
 ])
