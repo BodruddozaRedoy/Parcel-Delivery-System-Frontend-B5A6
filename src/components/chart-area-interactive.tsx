@@ -216,10 +216,11 @@ export function ChartAreaInteractive() {
           <AreaChart data={filteredData}>
             <defs>
               {/* Shared Gradient */}
-              <linearGradient id="gradientBluePurple" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#2563eb" />
-                <stop offset="100%" stopColor="#9333ea" />
+              <linearGradient id="gradientBluePurple" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2563eb" stopOpacity={1} />   {/* Top solid */}
+                <stop offset="100%" stopColor="#9333ea" stopOpacity={0} /> {/* Bottom transparent */}
               </linearGradient>
+
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
