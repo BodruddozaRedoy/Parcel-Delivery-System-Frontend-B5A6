@@ -2,6 +2,8 @@ import MainLayout from "@/layouts/MainLayout";
 import AboutPage from "@/pages/About/AboutPage";
 import ContactPage from "@/pages/Contact/ContactPage";
 import DashboardPage from "@/pages/Dashboard/DasboardPage";
+import ReceiverParcel from "@/pages/Dashboard/Receiver/ReceiverParcel";
+import SenderParcel from "@/pages/Dashboard/Sender/SenderParcel";
 import HomePage from "@/pages/Home/HomePage";
 import LoginPage from "@/pages/Login/LoginPage";
 import RegisterPage from "@/pages/Register/RegisterPage";
@@ -35,11 +37,28 @@ export const router = createBrowserRouter([
         Component: RegisterPage
     },
     {
-        path:"/dashboard",
+        path: "/dashboard",
         Component: DashboardPage,
         children: [
             {
-                path: "sender"
+                path: "sender",
+                index: true
+            },
+            {
+                path: "receiver",
+                index: true
+            },
+            {
+                path: "admin",
+                index: true
+            },
+            {
+                path: 'parcel/sender',
+                Component: SenderParcel
+            },
+            {
+                path: "parcel/receiver",
+                Component: ReceiverParcel
             }
         ]
     }

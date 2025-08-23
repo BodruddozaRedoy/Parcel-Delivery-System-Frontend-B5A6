@@ -30,21 +30,22 @@ export function LoginForm({
       setError(null)
       const result = await loginUser(data).unwrap()
       toast.success("Logged in successfully!")
-      
+
       // Role-based redirection
-      switch (result.data.user.role) {
-        case 'admin':
-          navigate('/admin')
-          break
-        case 'sender':
-          navigate('/sender')
-          break
-        case 'receiver':
-          navigate('/receiver')
-          break
-        default:
-          navigate('/')
-      }
+      // switch (result.data.user.role) {
+      //   case 'admin':
+      //     navigate('/admin')
+      //     break
+      //   case 'sender':
+      //     navigate('/sender')
+      //     break
+      //   case 'receiver':
+      //     navigate('/receiver')
+      //     break
+      //   default:
+      //     navigate('/')
+      // }
+      navigate("/")
     } catch (err: any) {
       setError(err.data?.message || 'Login failed')
     }
@@ -71,7 +72,7 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  {...register("email", { 
+                  {...register("email", {
                     required: "Email is required",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -93,9 +94,9 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input 
-                  id="password" 
-                  type="password" 
+                <Input
+                  id="password"
+                  type="password"
                   placeholder="Enter your password"
                   {...register("password", { required: "Password is required" })}
                 />
