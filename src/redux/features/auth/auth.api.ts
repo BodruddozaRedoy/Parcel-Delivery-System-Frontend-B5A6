@@ -8,13 +8,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/v1/users' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:5000/api/v1/users',
+    credentials: 'include' // Include cookies in requests
+  }),
   endpoints: (builder) => ({
     register: builder.mutation<ApiResponse<User>, RegisterRequest>({
       query: (userData) => ({
         url: '/register',
         method: 'POST',
         body: userData,
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     login: builder.mutation<LoginResponse, LoginRequest>({
@@ -22,12 +26,21 @@ export const authApi = createApi({
         url: '/login',
         method: 'POST',
         body: credentials,
+        credentials: 'include' // Include cookies in this request
+      }),
+    }),
+    logout: builder.mutation<ApiResponse<null>, void>({
+      query: () => ({
+        url: '/logout',
+        method: 'POST',
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     getProfile: builder.query<ApiResponse<User>, void>({
       query: () => ({
         url: '/me',
         method: 'GET',
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     updateProfile: builder.mutation<ApiResponse<User>, UpdateProfileRequest>({
@@ -35,6 +48,7 @@ export const authApi = createApi({
         url: '/me',
         method: 'PATCH',
         body: data,
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     toggleUserStatus: builder.mutation<ApiResponse<User>, { userId: string; data: ToggleUserStatusRequest }>({
@@ -42,6 +56,7 @@ export const authApi = createApi({
         url: `/${userId}/status`,
         method: 'PATCH',
         body: data,
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     getAllUsers: builder.query<ApiResponse<User[]>, { page?: number; limit?: number; search?: string; role?: string }>({
@@ -49,12 +64,14 @@ export const authApi = createApi({
         url: '/',
         method: 'GET',
         params: { page, limit, search, role },
+        credentials: 'include' // Include cookies in this request
       }),
     }),
     getUserStats: builder.query<ApiResponse<{ totalUsers: number; senderCount: number; receiverCount: number; adminCount: number }>, void>({
       query: () => ({
         url: '/stats',
         method: 'GET',
+        credentials: 'include' // Include cookies in this request
       }),
     }),
   }),
@@ -65,6 +82,7 @@ export const authApi = createApi({
 export const {
   useRegisterMutation,
   useLoginMutation,
+  useLogoutMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useToggleUserStatusMutation,

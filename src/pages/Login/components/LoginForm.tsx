@@ -9,11 +9,47 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useForm } from "react-hook-form"
+import { useLoginMutation } from "@/redux/features/auth/auth.api"
+import type { LoginRequest } from "@/types/index.types"
+import { useState } from "react"
+import { useNavigate } from "react-router"
+import { toast } from "sonner"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginRequest>()
+  const [loginUser, { isLoading }] = useLoginMutation()
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: LoginRequest) => {
+    try {
+      setError(null)
+      const result = await loginUser(data).unwrap()
+      toast.success("Logged in successfully!")
+      
+      // Role-based redirection
+      switch (result.data.user.role) {
+        case 'admin':
+          navigate('/admin')
+          break
+        case 'sender':
+          navigate('/sender')
+          break
+        case 'receiver':
+          navigate('/receiver')
+          break
+        default:
+          navigate('/')
+      }
+    } catch (err: any) {
+      setError(err.data?.message || 'Login failed')
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,16 +60,28 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
+              {error && (
+                <div className="text-red-500 text-sm">{error}</div>
+              )}
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  required
+                  {...register("email", { 
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address"
+                    }
+                  })}
                 />
+                {errors.email && (
+                  <span className="text-red-500 text-sm">{errors.email.message}</span>
+                )}
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -45,20 +93,28 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  placeholder="Enter your password"
+                  {...register("password", { required: "Password is required" })}
+                />
+                {errors.password && (
+                  <span className="text-red-500 text-sm">{errors.password.message}</span>
+                )}
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" type="button">
                   Login with Google
                 </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              Don't have an account?{" "}
+              <a href="/register" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>

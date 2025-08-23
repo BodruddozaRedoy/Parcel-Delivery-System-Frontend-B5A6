@@ -1,7 +1,10 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, Package, X } from "lucide-react"
-import { Link, useLocation } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
+import { useLogoutMutation } from "@/redux/features/auth/auth.api"
+import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
+import { toast } from "sonner"
 
 // Separate pages
 const pageLinks = [
@@ -20,9 +23,22 @@ const sectionLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  const [logout] = useLogoutMutation()
+  const { data: profileData, isLoading } = useGetProfileQuery()
 
   // Only show section links if we are on the home page
   const isHomePage = location.pathname === "/"
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap()
+      toast.success("Logged out successfully!")
+      navigate('/')
+    } catch (err) {
+      toast.error("Logout failed!")
+    }
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
@@ -61,10 +77,23 @@ export default function Navbar() {
 
         {/* Buttons */}
         <div className="flex items-center space-x-3">
-          <Button variant="ghost" className="hidden md:inline-flex">
-            Sign In
-          </Button>
-          <Button className="gradient-hero hover-glow">Get Started</Button>
+          {profileData ? (
+            <>
+              <Button variant="ghost" className="hidden md:inline-flex" onClick={handleLogout}>
+                Logout
+              </Button>
+              <Button className="gradient-hero hover-glow">Dashboard</Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" className="hidden md:inline-flex" asChild>
+                <Link to="/login">Sign In</Link>
+              </Button>
+              <Button className="gradient-hero hover-glow" asChild>
+                <Link to="/register">Get Started</Link>
+              </Button>
+            </>
+          )}
 
           {/* Mobile menu toggle */}
           <Button
@@ -105,12 +134,25 @@ export default function Navbar() {
                 </a>
               ))}
 
-            <Button variant="ghost" className="w-full">
-              Sign In
-            </Button>
-            <Button className="gradient-hero hover-glow w-full">
-              Get Started
-            </Button>
+            {profileData ? (
+              <>
+                <Button variant="ghost" className="w-full" onClick={handleLogout}>
+                  Logout
+                </Button>
+                <Button className="gradient-hero hover-glow w-full">
+                  Dashboard
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" className="w-full" asChild>
+                  <Link to="/login">Sign In</Link>
+                </Button>
+                <Button className="gradient-hero hover-glow w-full" asChild>
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       )}
