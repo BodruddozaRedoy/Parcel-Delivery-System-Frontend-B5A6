@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout";
 import AboutPage from "@/pages/About/AboutPage";
+import animation from "@/pages/animation";
 import ContactPage from "@/pages/Contact/ContactPage";
 import DashboardPage from "@/pages/Dashboard/components/DashboardPage";
 import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
@@ -62,5 +63,9 @@ export const router = createBrowserRouter([
                 Component: ReceiverParcel
             }
         ]
+    },
+    {
+        path: "/animation",
+        Component: animation
     }
 ])

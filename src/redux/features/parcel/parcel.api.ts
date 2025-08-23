@@ -10,13 +10,7 @@ export const parcelApi = createApi({
   reducerPath: 'parcelApi',
   baseQuery: fetchBaseQuery({ 
     baseUrl: 'http://localhost:5000/api/v1/parcels',
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     // Sender endpoints
@@ -27,8 +21,8 @@ export const parcelApi = createApi({
         body: parcelData,
       }),
     }),
-    getMyParcels: builder.query<PaginatedApiResponse<Parcel>, { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 10 }) => ({
+    getMyParcels: builder.query({
+      query: () => ({
         url: '/my-parcels',
         method: 'GET',
         // params: { page, limit },

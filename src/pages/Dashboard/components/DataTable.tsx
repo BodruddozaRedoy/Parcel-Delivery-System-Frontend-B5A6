@@ -215,7 +215,7 @@ export function DataTable<TData>({
 
         <div className="flex items-center gap-3">
           {/* Delete button */}
-          {table.getSelectedRowModel().rows.length > 0 && (
+          {table?.getSelectedRowModel()?.rows?.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="outline">
