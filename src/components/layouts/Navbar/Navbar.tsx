@@ -82,7 +82,7 @@ export default function Navbar() {
               <Button variant="ghost" className="hidden md:inline-flex" onClick={handleLogout}>
                 Logout
               </Button>
-              <Link to={"/dashboard"}><Button className="gradient-hero hover-glow">Dashboard</Button></Link>
+              <Link to={`/dashboard/${profileData?.data?.role}`}><Button className="gradient-hero hover-glow">Dashboard</Button></Link>
             </>
           ) : (
             <>
@@ -139,7 +139,7 @@ export default function Navbar() {
                 <Button variant="ghost" className="w-full" onClick={handleLogout}>
                   Logout
                 </Button>
-                <Link to={"/dashboard"}>
+                <Link to={`/dashboard/${profileData?.data?.role}`}>
                   <Button className="gradient-hero hover-glow w-full">
                     Dashboard
                   </Button>

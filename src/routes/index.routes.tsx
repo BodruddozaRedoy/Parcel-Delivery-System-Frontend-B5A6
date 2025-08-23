@@ -1,7 +1,8 @@
 import MainLayout from "@/layouts/MainLayout";
 import AboutPage from "@/pages/About/AboutPage";
 import ContactPage from "@/pages/Contact/ContactPage";
-import DashboardPage from "@/pages/Dashboard/DasboardPage";
+import DashboardPage from "@/pages/Dashboard/components/DashboardPage";
+import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
 import ReceiverParcel from "@/pages/Dashboard/Receiver/ReceiverParcel";
 import SenderParcel from "@/pages/Dashboard/Sender/SenderParcel";
 import HomePage from "@/pages/Home/HomePage";
@@ -38,19 +39,19 @@ export const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        Component: DashboardPage,
+        Component: DashboardLayout,
         children: [
             {
                 path: "sender",
-                index: true
+                Component: DashboardPage
             },
             {
                 path: "receiver",
-                index: true
+                Component: DashboardPage
             },
             {
                 path: "admin",
-                index: true
+                Component: DashboardPage
             },
             {
                 path: 'parcel/sender',

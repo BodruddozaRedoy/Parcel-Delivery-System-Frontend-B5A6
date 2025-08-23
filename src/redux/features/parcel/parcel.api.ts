@@ -31,7 +31,7 @@ export const parcelApi = createApi({
       query: ({ page = 1, limit = 10 }) => ({
         url: '/my-parcels',
         method: 'GET',
-        params: { page, limit },
+        // params: { page, limit },
       }),
     }),
     

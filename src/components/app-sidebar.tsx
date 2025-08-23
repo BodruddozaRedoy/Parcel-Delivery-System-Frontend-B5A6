@@ -1,7 +1,4 @@
 import * as React from "react"
-
-
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -17,7 +14,6 @@ import {
 import { Package } from "lucide-react"
 import { Link } from "react-router"
 import { data } from "@/pages/Dashboard/utils"
-// import { data } from "@/pages/Dashboard/utils"
 
 
 
