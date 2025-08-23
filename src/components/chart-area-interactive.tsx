@@ -13,10 +13,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type ChartConfig,
 } from "@/components/ui/chart"
 import {
   Select,
@@ -215,29 +215,10 @@ export function ChartAreaInteractive() {
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={1.0}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
-                />
+              {/* Shared Gradient */}
+              <linearGradient id="gradientBluePurple" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#2563eb" />
+                <stop offset="100%" stopColor="#9333ea" />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
@@ -269,18 +250,19 @@ export function ChartAreaInteractive() {
                 />
               }
             />
+            {/* Apply gradient for both series */}
             <Area
               dataKey="mobile"
               type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
+              fill="url(#gradientBluePurple)"
+              stroke="url(#gradientBluePurple)"
               stackId="a"
             />
             <Area
               dataKey="desktop"
               type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              fill="url(#gradientBluePurple)"
+              stroke="url(#gradientBluePurple)"
               stackId="a"
             />
           </AreaChart>

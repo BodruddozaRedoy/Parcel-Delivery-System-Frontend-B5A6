@@ -36,6 +36,11 @@ export const router = createBrowserRouter([
     },
     {
         path:"/dashboard",
-        Component: DashboardPage
+        Component: DashboardPage,
+        children: [
+            {
+                path: "sender"
+            }
+        ]
     }
 ])

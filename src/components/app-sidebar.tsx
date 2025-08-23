@@ -30,6 +30,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { Package } from "lucide-react"
+import { Link } from "react-router"
 
 const data = {
   user: {
@@ -158,10 +160,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link to={"/"}>
+                {/* Logo */}
+                <div className="flex items-center space-x-2">
+                  <Package className="h-8 w-8 text-primary" />
+                  <span className="text-2xl font-bold gradient-hero bg-clip-text text-transparent">
+                    SwiftShip
+                  </span>
+                </div>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
