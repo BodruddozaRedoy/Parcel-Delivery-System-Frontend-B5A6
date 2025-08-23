@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./features/auth/auth.api";
+import { parcelApi } from "./features/parcel/parcel.api";
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
+    [parcelApi.reducerPath]: parcelApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, parcelApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
