@@ -4,10 +4,10 @@ export interface Parcel {
   weight: number;
   fee: number;
   sender: string | User;
-  receiver: string | User;
+  receiver: {name:string,phone:string};
   fromAddress: string;
   toAddress: string;
-  status: 'pending' | 'approved' | 'in-transit' | 'delivered' | 'cancelled' | 'returned';
+  statusLogs: [{ status: string }];
   trackingId: string;
   deliveryDate?: string;
   createdAt: string;
@@ -19,7 +19,7 @@ export interface User {
   fullName: string;
   email: string;
   phone: string;
-  role: 'sender' | 'receiver' | 'admin';
+  role: "sender" | "receiver" | "admin";
   isBlocked?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -29,13 +29,19 @@ export interface CreateParcelRequest {
   type: string;
   weight: number;
   fee: number;
-  receiver: string;
+  receiver: {name:string,phone:string};
   fromAddress: string;
   toAddress: string;
 }
 
 export interface UpdateParcelStatusRequest {
-  status: 'pending' | 'approved' | 'in-transit' | 'delivered' | 'cancelled' | 'returned';
+  status:
+    | "pending"
+    | "approved"
+    | "in-transit"
+    | "delivered"
+    | "cancelled"
+    | "returned";
   note?: string;
   location?: string;
 }
@@ -67,14 +73,12 @@ export interface PaginatedApiResponse<T> {
   };
 }
 
-
-
 export interface User {
   _id: string;
   fullName: string;
   email: string;
   phone: string;
-  role: 'sender' | 'receiver' | 'admin';
+  role: "sender" | "receiver" | "admin";
   isBlocked?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -85,7 +89,7 @@ export interface RegisterRequest {
   email: string;
   phone: string;
   password: string;
-  role: 'sender' | 'receiver' | 'admin';
+  role: "sender" | "receiver" | "admin";
 }
 
 export interface LoginRequest {

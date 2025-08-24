@@ -1,17 +1,13 @@
-// Need to use the React-specific entry point to import createApi
 import type { ApiResponse, CreateParcelRequest, PaginatedApiResponse, Parcel, ParcelStats, UpdateParcelStatusRequest } from '@/types/index.types';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Define types for parcel management
-
-
-// Define a service using a base URL and expected endpoints
 export const parcelApi = createApi({
   reducerPath: 'parcelApi',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000/api/v1/parcels',
-    credentials: "include",
+    credentials: 'include',
   }),
+  tagTypes: ['Parcel'],
   endpoints: (builder) => ({
     // Sender endpoints
     createParcel: builder.mutation<ApiResponse<Parcel>, CreateParcelRequest>({
@@ -20,15 +16,17 @@ export const parcelApi = createApi({
         method: 'POST',
         body: parcelData,
       }),
+      invalidatesTags: ['Parcel'],
     }),
-    getMyParcels: builder.query({
-      query: () => ({
-        url: '/my-parcels',
-        method: 'GET',
-        // params: { page, limit },
-      }),
+
+    getMyParcels: builder.query<PaginatedApiResponse<Parcel>, void>({
+      query: () => ({ url: '/my-parcels', method: 'GET' }),
+      providesTags: (result) =>
+        result
+          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+          : ['Parcel'],
     }),
-    
+
     // Receiver endpoints
     getIncomingParcels: builder.query<PaginatedApiResponse<Parcel>, { page?: number; limit?: number }>({
       query: ({ page = 1, limit = 10 }) => ({
@@ -36,30 +34,29 @@ export const parcelApi = createApi({
         method: 'GET',
         params: { page, limit },
       }),
+      providesTags: (result) =>
+        result
+          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+          : ['Parcel'],
     }),
-    
+
     // Public endpoints
     trackParcel: builder.query<ApiResponse<Parcel>, string>({
-      query: (trackingId) => ({
-        url: `/track/${trackingId}`,
-        method: 'GET',
-      }),
+      query: (trackingId) => ({ url: `/track/${trackingId}`, method: 'GET' }),
+      providesTags: (result) => (result ? [{ type: 'Parcel', id: result.data._id }] : []),
     }),
-    
+
     // Parcel actions
     cancelParcel: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({
-        url: `/cancel/${parcelId}`,
-        method: 'PATCH',
-      }),
+      query: (parcelId) => ({ url: `/cancel/${parcelId}`, method: 'PATCH' }),
+      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
     }),
+
     confirmDelivery: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({
-        url: `/confirm/${parcelId}`,
-        method: 'PATCH',
-      }),
+      query: (parcelId) => ({ url: `/confirm/${parcelId}`, method: 'PATCH' }),
+      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
     }),
-    
+
     // Admin endpoints
     getAllParcels: builder.query<PaginatedApiResponse<Parcel>, { page?: number; limit?: number; search?: string }>({
       query: ({ page = 1, limit = 10, search }) => ({
@@ -67,43 +64,39 @@ export const parcelApi = createApi({
         method: 'GET',
         params: { page, limit, search },
       }),
+      providesTags: (result) =>
+        result
+          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+          : ['Parcel'],
     }),
+
     getParcelStats: builder.query<ApiResponse<ParcelStats>, void>({
-      query: () => ({
-        url: '/stats',
-        method: 'GET',
-      }),
+      query: () => ({ url: '/stats', method: 'GET' }),
     }),
+
     getParcelById: builder.query<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({
-        url: `/${parcelId}`,
-        method: 'GET',
-      }),
+      query: (parcelId) => ({ url: `/${parcelId}`, method: 'GET' }),
+      providesTags: (result) => (result ? [{ type: 'Parcel', id: result.data._id }] : []),
     }),
+
     updateParcelStatus: builder.mutation<ApiResponse<Parcel>, { parcelId: string; data: UpdateParcelStatusRequest }>({
-      query: ({ parcelId, data }) => ({
-        url: `/status/${parcelId}`,
-        method: 'PATCH',
-        body: data,
-      }),
+      query: ({ parcelId, data }) => ({ url: `/status/${parcelId}`, method: 'PATCH', body: data }),
+      invalidatesTags: (result, error, { parcelId }) => [{ type: 'Parcel', id: parcelId }],
     }),
+
     toggleParcelStatus: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({
-        url: `/toggle/${parcelId}`,
-        method: 'PATCH',
-      }),
+      query: (parcelId) => ({ url: `/toggle/${parcelId}`, method: 'PATCH' }),
+      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
     }),
+
     deleteParcel: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({
-        url: `/${parcelId}`,
-        method: 'DELETE',
-      }),
+      query: (parcelId) => ({ url: `/${parcelId}`, method: 'DELETE' }),
+      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
     }),
   }),
-})
+});
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
+// Export hooks
 export const {
   useCreateParcelMutation,
   useGetMyParcelsQuery,
@@ -117,4 +110,4 @@ export const {
   useUpdateParcelStatusMutation,
   useToggleParcelStatusMutation,
   useDeleteParcelMutation,
-} = parcelApi
+} = parcelApi;

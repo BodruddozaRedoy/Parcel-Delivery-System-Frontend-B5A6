@@ -1,39 +1,17 @@
-// import data from '@/assets/data.json'
-// import DataTable from '../components/DataTable'
-import type { ColumnDef } from '@tanstack/react-table'
-import { DataTable } from '../components/DataTable'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
 import { useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
-// export interface Parcel {
-//   _id: string;
-//   type: string;
-//   weight: number;
-//   fee: number;
-//   sender: string | User;
-//   receiver: string | User;
-//   fromAddress: string;
-//   toAddress: string;
-//   status: 'pending' | 'approved' | 'in-transit' | 'delivered' | 'cancelled' | 'returned';
-//   trackingId: string;
-//   deliveryDate?: string;
-//   createdAt: string;
-//   updatedAt: string;
-// }
-
-
-
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import AddParcelModal from './AddParcelModal'
 
 
 export default function SenderParcel() {
@@ -42,6 +20,9 @@ export default function SenderParcel() {
     console.log("parcels", parcels?.data)
     return (
         <div className='p-5'>
+            <div className='mb-3'>
+                <AddParcelModal/>
+            </div>
             <div className='border rounded-lg overflow-hidden p-5'>
                 <Table>
                     <TableHeader>
@@ -73,7 +54,7 @@ export default function SenderParcel() {
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
-                                        <Badge variant="success">{parcel.statusLogs[0].status}</Badge>
+                                        <Badge variant="outline">{parcel.statusLogs[0]?.status?.toLocaleUpperCase()}</Badge>
                                     </TableCell>
                                     {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
