@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useCancelParcelMutation, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -10,18 +10,38 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
 import AddParcelModal from './AddParcelModal'
+import { toast } from 'sonner'
 
 
 export default function SenderParcel() {
 
     const { data: parcels } = useGetMyParcelsQuery(undefined)
+    const [cancelParcel] = useCancelParcelMutation()
     console.log("parcels", parcels?.data)
+
+    const handleCancelParcel = async (parcelId: string, status: string) => {
+        console.log("status", status)
+        const normalizedStatus = status?.trim().toLowerCase()
+        console.log("normalized:", normalizedStatus)
+
+        try {
+            if (["dispatched", "in_transit", "delivered", "canceled"].includes(normalizedStatus)) {
+                return toast.error("You can't cancel the parcel!!")
+            }
+
+            const res = await cancelParcel(parcelId).unwrap()
+            console.log(res)
+            toast.success("Canceled the parcel!")
+        } catch (error) {
+            toast.error("Couldn't cancel the parcel!")
+        }
+    }
+
     return (
         <div className='p-5'>
             <div className='mb-3'>
-                <AddParcelModal/>
+                <AddParcelModal />
             </div>
             <div className='border rounded-lg overflow-hidden p-5'>
                 <Table>
@@ -38,7 +58,7 @@ export default function SenderParcel() {
                             <TableHead>Status</TableHead>
                             {/* <TableHead>Delivery Date</TableHead> */}
                             <TableHead>Created At</TableHead>
-                            {/* <TableHead>Updated At</TableHead> */}
+                            <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -54,11 +74,11 @@ export default function SenderParcel() {
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
-                                        <Badge variant="outline">{parcel.statusLogs[0]?.status?.toLocaleUpperCase()}</Badge>
+                                        <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
                                     </TableCell>
                                     {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
-                                    {/* <TableCell>2025-08-22</TableCell> */}
+                                    <TableCell><Button disabled={parcel.currentStatus === "canceled"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-red-500 text-red-500' variant={"outline"} size={"sm"}>Cancel</Button></TableCell>
                                 </TableRow>
                             ))
                         }

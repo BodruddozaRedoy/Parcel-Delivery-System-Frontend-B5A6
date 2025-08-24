@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
 import LoadingScreen from "@/components/common/LoadingScreen"
 import { Outlet } from "react-router"
+import { Toaster } from "sonner"
 
 
 export default function DashboardLayout() {
@@ -21,13 +22,15 @@ export default function DashboardLayout() {
                 >
                     <AppSidebar variant="inset" />
                     <SidebarInset>
-                        <SiteHeader/>
+                        <SiteHeader />
                         <div className="">
-                            <Outlet/>
+                            <Outlet />
                         </div>
                     </SidebarInset>
                 </SidebarProvider>
             }
+            <Toaster />
+
         </>
     )
 }

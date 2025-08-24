@@ -12,6 +12,7 @@ export interface Parcel {
   deliveryDate?: string;
   createdAt: string;
   updatedAt: string;
+  currentStatus:string;
 }
 
 export interface User {

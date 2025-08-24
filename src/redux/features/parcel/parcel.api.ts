@@ -21,23 +21,25 @@ export const parcelApi = createApi({
 
     getMyParcels: builder.query<PaginatedApiResponse<Parcel>, void>({
       query: () => ({ url: '/my-parcels', method: 'GET' }),
-      providesTags: (result) =>
-        result
-          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
-          : ['Parcel'],
+      // providesTags: (result) =>
+      //   result
+      //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+      //     : ['Parcel'],
+      providesTags: ["Parcel"]
     }),
 
     // Receiver endpoints
-    getIncomingParcels: builder.query<PaginatedApiResponse<Parcel>, { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 10 }) => ({
+    getIncomingParcels: builder.query({
+      query: () => ({
         url: '/incoming',
         method: 'GET',
-        params: { page, limit },
+        // params: { page, limit },
       }),
-      providesTags: (result) =>
-        result
-          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
-          : ['Parcel'],
+      // providesTags: (result) =>
+      //   result
+      //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+      //     : ['Parcel'],
+      providesTags: ["Parcel"]
     }),
 
     // Public endpoints
@@ -49,12 +51,14 @@ export const parcelApi = createApi({
     // Parcel actions
     cancelParcel: builder.mutation<ApiResponse<Parcel>, string>({
       query: (parcelId) => ({ url: `/cancel/${parcelId}`, method: 'PATCH' }),
-      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"]
     }),
 
     confirmDelivery: builder.mutation<ApiResponse<Parcel>, string>({
       query: (parcelId) => ({ url: `/confirm/${parcelId}`, method: 'PATCH' }),
-      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"]
     }),
 
     // Admin endpoints
@@ -64,10 +68,11 @@ export const parcelApi = createApi({
         method: 'GET',
         params: { page, limit, search },
       }),
-      providesTags: (result) =>
-        result
-          ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
-          : ['Parcel'],
+      // providesTags: (result) =>
+      //   result
+      //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
+      //     : ['Parcel'],
+      providesTags: ["Parcel"]
     }),
 
     getParcelStats: builder.query<ApiResponse<ParcelStats>, void>({
@@ -81,17 +86,20 @@ export const parcelApi = createApi({
 
     updateParcelStatus: builder.mutation<ApiResponse<Parcel>, { parcelId: string; data: UpdateParcelStatusRequest }>({
       query: ({ parcelId, data }) => ({ url: `/status/${parcelId}`, method: 'PATCH', body: data }),
-      invalidatesTags: (result, error, { parcelId }) => [{ type: 'Parcel', id: parcelId }],
+      // invalidatesTags: (result, error, { parcelId }) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"]
     }),
 
     toggleParcelStatus: builder.mutation<ApiResponse<Parcel>, string>({
       query: (parcelId) => ({ url: `/toggle/${parcelId}`, method: 'PATCH' }),
-      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"]
     }),
 
     deleteParcel: builder.mutation<ApiResponse<Parcel>, string>({
       query: (parcelId) => ({ url: `/${parcelId}`, method: 'DELETE' }),
-      invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"]
     }),
   }),
 });

@@ -3,7 +3,7 @@ import AboutPage from "@/pages/About/AboutPage";
 import animation from "@/pages/animation";
 import ContactPage from "@/pages/Contact/ContactPage";
 import DashboardPage from "@/pages/Dashboard/components/DashboardPage";
-import DashboardLayout from "@/pages/Dashboard/DashboardLayout";
+import DashboardLayout from "@/layouts/DashboardLayout";
 import ReceiverParcel from "@/pages/Dashboard/Receiver/ReceiverParcel";
 import SenderParcel from "@/pages/Dashboard/Sender/SenderParcel";
 import HomePage from "@/pages/Home/HomePage";
