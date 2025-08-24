@@ -13,6 +13,7 @@ export interface Parcel {
   createdAt: string;
   updatedAt: string;
   currentStatus:string;
+  isBlocked:boolean
 }
 
 export interface User {
@@ -36,13 +37,7 @@ export interface CreateParcelRequest {
 }
 
 export interface UpdateParcelStatusRequest {
-  status:
-    | "pending"
-    | "approved"
-    | "in-transit"
-    | "delivered"
-    | "cancelled"
-    | "returned";
+  status:string;
   note?: string;
   location?: string;
 }

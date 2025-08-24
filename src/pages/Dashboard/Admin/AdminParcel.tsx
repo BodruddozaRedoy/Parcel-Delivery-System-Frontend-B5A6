@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleBlockMutation, useUpdateParcelStatusMutation } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -10,13 +10,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
@@ -26,24 +26,36 @@ import { toast } from 'sonner'
 export default function AdminParcel() {
 
     const { data: parcels } = useGetAllParcelsQuery(undefined)
-    const [cancelParcel] = useCancelParcelMutation()
+    const [toggleBlock] = useToggleBlockMutation()
+    const [updateParcelStatus] = useUpdateParcelStatusMutation()
     console.log("parcels", parcels?.data)
 
-    const handleCancelParcel = async (parcelId: string, status: string) => {
-        console.log("status", status)
-        const normalizedStatus = status?.trim().toLowerCase()
-        console.log("normalized:", normalizedStatus)
-
+    const handleBlockParcel = async (parcelId: string, isBlocked:boolean) => {
         try {
-            if (["dispatched", "in_transit", "delivered", "canceled"].includes(normalizedStatus)) {
-                return toast.error("You can't cancel the parcel!!")
-            }
-
-            const res = await cancelParcel(parcelId).unwrap()
+            const res = await toggleBlock(parcelId).unwrap()
             console.log(res)
-            toast.success("Canceled the parcel!")
+            if(!isBlocked){
+                toast.success("Blocked the parcel!")
+            }else{
+                toast.success("Unblocked the parcel!")
+            }
         } catch (error) {
             toast.error("Couldn't cancel the parcel!")
+        }
+    }
+
+    const handleUpdateParcelStatus = async (parcelId: string, status: string) => {
+        const data = {
+            status: status,
+            location: "murpur",
+            note: "muri kha"
+        }
+        try {
+            const res = await updateParcelStatus({ parcelId, data })
+            console.log(res)
+            toast.success("Status updated!")
+        } catch (error) {
+            toast.error("Something went wrong!")
         }
     }
 
@@ -78,36 +90,47 @@ export default function AdminParcel() {
                                     <TableCell>{parcel.type}</TableCell>
                                     <TableCell>{parcel?.weight}Kg</TableCell>
                                     <TableCell>${parcel.fee}</TableCell>
-                                    {/* <TableCell>{parcel.sender}</TableCell> */}
-                                    {/* <TableCell>{parcel.receiver}</TableCell> */}
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
                                         <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
                                     </TableCell>
-                                    {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
-                                    <TableCell className='space-x-3 flex'>
-                                        <Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
-                                            {parcel.currentStatus === "canceled" && "Canceled"}
-                                            {parcel.currentStatus === "delivered" && "Delivered"}
-                                            {!["canceled", "delivered"].includes(parcel.currentStatus) && "Confirm"}
-                                        </Button>
-                                        <Select value={parcel.currentStatus?.toUpperCase()}>
+                                    <TableCell className="space-x-3 flex">
+                                        {/* Update Status */}
+                                        <Select
+                                            value={parcel.currentStatus}
+                                            onValueChange={(value) => handleUpdateParcelStatus(parcel._id, value)}
+                                        >
                                             <SelectTrigger className="">
-                                                <SelectValue />
+                                                <SelectValue placeholder="Select status" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Status</SelectLabel>
+                                                    <SelectItem value="requested">Requested</SelectItem>
                                                     <SelectItem value="approved">Approved</SelectItem>
-                                                    <SelectItem value="dispatched">dispatched</SelectItem>
-                                                    <SelectItem value="in_transit">in_transit</SelectItem>
-                                                    <SelectItem value="delivered">delivered</SelectItem>
+                                                    <SelectItem value="dispatched">Dispatched</SelectItem>
+                                                    <SelectItem value="in_transit">In Transit</SelectItem>
+                                                    <SelectItem value="delivered">Delivered</SelectItem>
+                                                    <SelectItem value="canceled">Canceled</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
+
+
                                     </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            onClick={() => handleBlockParcel(parcel._id, parcel.isBlocked)}
+                                            className="border border-red-500 text-red-500"
+                                            variant={"outline"}
+                                            size={"sm"}
+                                        >
+                                            {parcel?.isBlocked ? "Unblock" : "Block"}
+                                        </Button>
+                                    </TableCell>
+
                                 </TableRow>
                             ))
                         }

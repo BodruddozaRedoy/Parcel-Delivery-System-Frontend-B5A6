@@ -1,105 +1,129 @@
-import type { ApiResponse, CreateParcelRequest, PaginatedApiResponse, Parcel, ParcelStats, UpdateParcelStatusRequest } from '@/types/index.types';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type {
+  ApiResponse,
+  CreateParcelRequest,
+  PaginatedApiResponse,
+  Parcel,
+  ParcelStats,
+  UpdateParcelStatusRequest,
+} from "@/types/index.types";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const parcelApi = createApi({
-  reducerPath: 'parcelApi',
+  reducerPath: "parcelApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/v1/parcels',
-    credentials: 'include',
+    baseUrl: "http://localhost:5000/api/v1/parcels",
+    credentials: "include",
   }),
-  tagTypes: ['Parcel'],
+  tagTypes: ["Parcel"],
   endpoints: (builder) => ({
     // Sender endpoints
     createParcel: builder.mutation<ApiResponse<Parcel>, CreateParcelRequest>({
       query: (parcelData) => ({
-        url: '/',
-        method: 'POST',
+        url: "/",
+        method: "POST",
         body: parcelData,
       }),
-      invalidatesTags: ['Parcel'],
+      invalidatesTags: ["Parcel"],
     }),
 
     getMyParcels: builder.query<PaginatedApiResponse<Parcel>, void>({
-      query: () => ({ url: '/my-parcels', method: 'GET' }),
+      query: () => ({ url: "/my-parcels", method: "GET" }),
       // providesTags: (result) =>
       //   result
       //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
       //     : ['Parcel'],
-      providesTags: ["Parcel"]
+      providesTags: ["Parcel"],
     }),
 
     // Receiver endpoints
     getIncomingParcels: builder.query({
       query: () => ({
-        url: '/incoming',
-        method: 'GET',
+        url: "/incoming",
+        method: "GET",
         // params: { page, limit },
       }),
       // providesTags: (result) =>
       //   result
       //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
       //     : ['Parcel'],
-      providesTags: ["Parcel"]
+      providesTags: ["Parcel"],
     }),
 
     // Public endpoints
     trackParcel: builder.query<ApiResponse<Parcel>, string>({
-      query: (trackingId) => ({ url: `/track/${trackingId}`, method: 'GET' }),
-      providesTags: (result) => (result ? [{ type: 'Parcel', id: result.data._id }] : []),
+      query: (trackingId) => ({ url: `/track/${trackingId}`, method: "GET" }),
+      providesTags: (result) =>
+        result ? [{ type: "Parcel", id: result.data._id }] : [],
     }),
 
     // Parcel actions
     cancelParcel: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({ url: `/cancel/${parcelId}`, method: 'PATCH' }),
+      query: (parcelId) => ({ url: `/cancel/${parcelId}`, method: "PATCH" }),
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
-      invalidatesTags: ["Parcel"]
+      invalidatesTags: ["Parcel"],
     }),
 
     confirmDelivery: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({ url: `/confirm/${parcelId}`, method: 'PATCH' }),
+      query: (parcelId) => ({ url: `/confirm/${parcelId}`, method: "PATCH" }),
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
-      invalidatesTags: ["Parcel"]
+      invalidatesTags: ["Parcel"],
     }),
 
     // Admin endpoints
     getAllParcels: builder.query({
       query: () => ({
-        url: '/',
-        method: 'GET',
+        url: "/",
+        method: "GET",
         // params: { page, limit, search },
       }),
       // providesTags: (result) =>
       //   result
       //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
       //     : ['Parcel'],
-      providesTags: ["Parcel"]
+      providesTags: ["Parcel"],
     }),
 
     getParcelStats: builder.query<ApiResponse<ParcelStats>, void>({
-      query: () => ({ url: '/stats', method: 'GET' }),
+      query: () => ({ url: "/stats", method: "GET" }),
     }),
 
     getParcelById: builder.query<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({ url: `/${parcelId}`, method: 'GET' }),
-      providesTags: (result) => (result ? [{ type: 'Parcel', id: result.data._id }] : []),
+      query: (parcelId) => ({ url: `/${parcelId}`, method: "GET" }),
+      providesTags: (result) =>
+        result ? [{ type: "Parcel", id: result.data._id }] : [],
     }),
 
-    updateParcelStatus: builder.mutation<ApiResponse<Parcel>, { parcelId: string; data: UpdateParcelStatusRequest }>({
-      query: ({ parcelId, data }) => ({ url: `/status/${parcelId}`, method: 'PATCH', body: data }),
+    updateParcelStatus: builder.mutation<
+      ApiResponse<Parcel>,
+      { parcelId: string; data: UpdateParcelStatusRequest }
+    >({
+      query: ({ parcelId, data }) => ({
+        url: `/status/${parcelId}`,
+        method: "PATCH",
+        body: data,
+      }),
       // invalidatesTags: (result, error, { parcelId }) => [{ type: 'Parcel', id: parcelId }],
-      invalidatesTags: ["Parcel"]
+      invalidatesTags: ["Parcel"],
     }),
 
     toggleParcelStatus: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({ url: `/toggle/${parcelId}`, method: 'PATCH' }),
+      query: (parcelId) => ({ url: `/toggle/${parcelId}`, method: "PATCH" }),
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
-      invalidatesTags: ["Parcel"]
+      invalidatesTags: ["Parcel"],
     }),
 
     deleteParcel: builder.mutation<ApiResponse<Parcel>, string>({
-      query: (parcelId) => ({ url: `/${parcelId}`, method: 'DELETE' }),
+      query: (parcelId) => ({ url: `/${parcelId}`, method: "DELETE" }),
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
-      invalidatesTags: ["Parcel"]
+      invalidatesTags: ["Parcel"],
+    }),
+    toggleBlock: builder.mutation({
+      query: (parcelId) => ({ 
+        url: `/toggle/block/${parcelId}`, 
+        method: "PATCH" 
+      }),
+      // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
+      invalidatesTags: ["Parcel"],
     }),
   }),
 });
@@ -118,4 +142,5 @@ export const {
   useUpdateParcelStatusMutation,
   useToggleParcelStatusMutation,
   useDeleteParcelMutation,
+  useToggleBlockMutation
 } = parcelApi;
