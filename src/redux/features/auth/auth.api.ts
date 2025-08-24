@@ -104,6 +104,15 @@ export const authApi = createApi({
       }),
       providesTags: ["User"],
     }),
+    toggleUserBlock: builder.mutation({
+      query: (userId) => ({
+        url: `/toggle/block/${userId}`,
+        method: "PATCH",
+        // body: data,
+        credentials: "include", // Include cookies in this request
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -118,4 +127,5 @@ export const {
   useToggleUserStatusMutation,
   useGetAllUsersQuery,
   useGetUserStatsQuery,
+  useToggleUserBlockMutation
 } = authApi;

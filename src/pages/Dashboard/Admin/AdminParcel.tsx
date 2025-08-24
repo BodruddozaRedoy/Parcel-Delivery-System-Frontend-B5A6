@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleBlockMutation, useUpdateParcelStatusMutation } from '@/redux/features/parcel/parcel.api'
+import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleParcelBlockMutation, useUpdateParcelStatusMutation } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -26,17 +26,17 @@ import { toast } from 'sonner'
 export default function AdminParcel() {
 
     const { data: parcels } = useGetAllParcelsQuery(undefined)
-    const [toggleBlock] = useToggleBlockMutation()
+    const [toggleBlock] = useToggleParcelBlockMutation()
     const [updateParcelStatus] = useUpdateParcelStatusMutation()
     console.log("parcels", parcels?.data)
 
-    const handleBlockParcel = async (parcelId: string, isBlocked:boolean) => {
+    const handleBlockParcel = async (parcelId: string, isBlocked: boolean) => {
         try {
             const res = await toggleBlock(parcelId).unwrap()
             console.log(res)
-            if(!isBlocked){
+            if (!isBlocked) {
                 toast.success("Blocked the parcel!")
-            }else{
+            } else {
                 toast.success("Unblocked the parcel!")
             }
         } catch (error) {
@@ -101,6 +101,7 @@ export default function AdminParcel() {
                                         <Select
                                             value={parcel.currentStatus}
                                             onValueChange={(value) => handleUpdateParcelStatus(parcel._id, value)}
+                                            disabled={parcel.currentStatus === "canceled" || parcel.currentStatus == "delivered"}
                                         >
                                             <SelectTrigger className="">
                                                 <SelectValue placeholder="Select status" />
@@ -122,6 +123,7 @@ export default function AdminParcel() {
                                     </TableCell>
                                     <TableCell>
                                         <Button
+                                            disabled={parcel.currentStatus === "canceled" || parcel.currentStatus == "delivered"}
                                             onClick={() => handleBlockParcel(parcel._id, parcel.isBlocked)}
                                             className="border border-red-500 text-red-500"
                                             variant={"outline"}

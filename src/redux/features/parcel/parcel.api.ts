@@ -117,7 +117,7 @@ export const parcelApi = createApi({
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
       invalidatesTags: ["Parcel"],
     }),
-    toggleBlock: builder.mutation({
+    toggleParcelBlock: builder.mutation({
       query: (parcelId) => ({ 
         url: `/toggle/block/${parcelId}`, 
         method: "PATCH" 
@@ -142,5 +142,5 @@ export const {
   useUpdateParcelStatusMutation,
   useToggleParcelStatusMutation,
   useDeleteParcelMutation,
-  useToggleBlockMutation
+  useToggleParcelBlockMutation
 } = parcelApi;

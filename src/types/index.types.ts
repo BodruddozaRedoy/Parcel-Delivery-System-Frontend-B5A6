@@ -21,6 +21,7 @@ export interface User {
   fullName: string;
   email: string;
   phone: string;
+  status: string
   role: "sender" | "receiver" | "admin";
   isBlocked?: boolean;
   createdAt: string;
