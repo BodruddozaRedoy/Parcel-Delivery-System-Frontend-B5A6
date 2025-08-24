@@ -62,11 +62,11 @@ export const parcelApi = createApi({
     }),
 
     // Admin endpoints
-    getAllParcels: builder.query<PaginatedApiResponse<Parcel>, { page?: number; limit?: number; search?: string }>({
-      query: ({ page = 1, limit = 10, search }) => ({
+    getAllParcels: builder.query({
+      query: () => ({
         url: '/',
         method: 'GET',
-        params: { page, limit, search },
+        // params: { page, limit, search },
       }),
       // providesTags: (result) =>
       //   result

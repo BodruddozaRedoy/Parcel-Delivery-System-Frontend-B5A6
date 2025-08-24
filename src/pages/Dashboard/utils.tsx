@@ -17,7 +17,7 @@ import {
   IconUsers,
   IconWebhook,
 } from "@tabler/icons-react"
-import { Package } from "lucide-react"
+import { Package, User } from "lucide-react"
 
 export const data = () => {
   const { data: user } = useGetProfileQuery()
@@ -40,26 +40,16 @@ export const data = () => {
         url: `/dashboard/parcel/${user?.data?.role}`,
         icon: Package,
       },
-      // {
-      //   title: "Lifecycle",
-      //   url: "#",
-      //   icon: IconListDetails,
-      // },
-      // {
-      //   title: "Analytics",
-      //   url: "#",
-      //   icon: IconChartBar,
-      // },
-      // {
-      //   title: "Projects",
-      //   url: "#",
-      //   icon: IconFolder,
-      // },
-      // {
-      //   title: "Team",
-      //   url: "#",
-      //   icon: IconUsers,
-      // },
+      {
+        title: "User",
+        url: `/dashboard/user`,
+        icon: User,
+      },
+      {
+        title: "Delivery History",
+        url: `/dashboard/deliver-history`,
+        icon: Package,
+      },
       {
         title: "Visit Site",
         url: "/",
@@ -67,54 +57,8 @@ export const data = () => {
       },
 
     ],
-    navClouds: [
-      {
-        title: "Capture",
-        icon: IconCamera,
-        isActive: true,
-        url: "#",
-        items: [
-          {
-            title: "Active Proposals",
-            url: "#",
-          },
-          {
-            title: "Archived",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Proposal",
-        icon: IconFileDescription,
-        url: "#",
-        items: [
-          {
-            title: "Active Proposals",
-            url: "#",
-          },
-          {
-            title: "Archived",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Prompts",
-        icon: IconFileAi,
-        url: "#",
-        items: [
-          {
-            title: "Active Proposals",
-            url: "#",
-          },
-          {
-            title: "Archived",
-            url: "#",
-          },
-        ],
-      },
-    ],
+
+
     navSecondary: [
       {
         title: "Settings",

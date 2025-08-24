@@ -25,7 +25,11 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const [logout] = useLogoutMutation()
-  const { data: profileData, isLoading } = useGetProfileQuery()
+  const { data: profileData, isLoading, refetch } = useGetProfileQuery(undefined,{
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true
+  })
 
   // Only show section links if we are on the home page
   const isHomePage = location.pathname === "/"
@@ -35,6 +39,7 @@ export default function Navbar() {
       await logout().unwrap()
       toast.success("Logged out successfully!")
       navigate('/')
+      refetch()
     } catch (err) {
       toast.error("Logout failed!")
     }

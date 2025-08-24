@@ -10,6 +10,9 @@ import HomePage from "@/pages/Home/HomePage";
 import LoginPage from "@/pages/Login/LoginPage";
 import RegisterPage from "@/pages/Register/RegisterPage";
 import { createBrowserRouter } from "react-router";
+import AdminParcel from "@/pages/Dashboard/Admin/AdminParcel";
+import UserPage from "@/pages/Dashboard/Admin/UserPage";
+import DeliveryHistory from "@/pages/Dashboard/Receiver/DeliveryHistory";
 
 export const router = createBrowserRouter([
     {
@@ -61,6 +64,18 @@ export const router = createBrowserRouter([
             {
                 path: "parcel/receiver",
                 Component: ReceiverParcel
+            },
+            {
+                path: "parcel/admin",
+                Component: AdminParcel
+            },
+            {
+                path: "user",
+                Component: UserPage
+            },
+            {
+                path: "deliver-history",
+                Component: DeliveryHistory
             }
         ]
     },
