@@ -26,7 +26,7 @@ export default function ParcelStatusLogModal({
             {currentStatus?.toLocaleUpperCase()}
           </Badge>
         </DialogTrigger>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[70vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold mb-4">
               Parcel Status Timeline
@@ -42,9 +42,6 @@ export default function ParcelStatusLogModal({
                 key={index}
                 className="relative border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white"
               >
-                {/* Left timeline dot */}
-                {/* <span className="absolute -left-3 top-5 h-3 w-3 rounded-full bg-primary"></span> */}
-
                 <div className="flex flex-col gap-1">
                   <p className="text-sm font-medium">
                     <span className="font-semibold text-primary">
@@ -69,6 +66,7 @@ export default function ParcelStatusLogModal({
             ))}
           </div>
         </DialogContent>
+
       </Dialog>
     </div>
   )

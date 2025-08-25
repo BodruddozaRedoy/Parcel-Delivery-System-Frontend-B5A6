@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleParcelBlockMutation, useUpdateParcelStatusMutation } from '@/redux/features/parcel/parcel.api'
+import { useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -9,57 +9,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Button } from '@/components/ui/button'
-// import AddParcelModal from './AddParcelModal'
-import { toast } from 'sonner'
+
 
 
 export default function DeliveryHistory() {
 
-    const { data: parcels } = useGetAllParcelsQuery(undefined)
-    const [toggleBlock] = useToggleParcelBlockMutation()
-    const [updateParcelStatus] = useUpdateParcelStatusMutation()
+    const { data: parcels } = useGetMyParcelsQuery(undefined)
     console.log("parcels", parcels?.data)
 
     const updatedParcels = parcels?.data?.filter((prev: any) => prev.currentStatus === "delivered")
 
-    const handleBlockParcel = async (parcelId: string, isBlocked: boolean) => {
-        try {
-            const res = await toggleBlock(parcelId).unwrap()
-            console.log(res)
-            if (!isBlocked) {
-                toast.success("Blocked the parcel!")
-            } else {
-                toast.success("Unblocked the parcel!")
-            }
-        } catch (error) {
-            toast.error("Couldn't cancel the parcel!")
-        }
-    }
 
-    const handleUpdateParcelStatus = async (parcelId: string, status: string) => {
-        const data = {
-            status: status,
-            location: "murpur",
-            note: "muri kha"
-        }
-        try {
-            const res = await updateParcelStatus({ parcelId, data })
-            console.log(res)
-            toast.success("Status updated!")
-        } catch (error) {
-            toast.error("Something went wrong!")
-        }
-    }
 
     return (
         <div className='p-5'>

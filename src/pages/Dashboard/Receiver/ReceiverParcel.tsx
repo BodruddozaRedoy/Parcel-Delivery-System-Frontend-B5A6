@@ -1,6 +1,5 @@
-import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useCancelParcelMutation, useConfirmDeliveryMutation, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -12,29 +11,30 @@ import {
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
+import ParcelStatusLogModal from '../Sender/ParcelStatusLogModal'
 
 
 export default function ReceiverParcel() {
 
     const { data: parcels } = useGetIncomingParcelsQuery(undefined)
-    const [cancelParcel] = useCancelParcelMutation()
+    const [confirmDeliver] = useConfirmDeliveryMutation()
     console.log("parcels", parcels?.data)
 
-    const handleCancelParcel = async (parcelId: string, status: string) => {
-        console.log("status", status)
-        const normalizedStatus = status?.trim().toLowerCase()
-        console.log("normalized:", normalizedStatus)
+    const handleCancelParcel = async (parcelId: string) => {
+        // console.log("status", status)
+        // const normalizedStatus = status?.trim().toLowerCase()
+        // console.log("normalized:", normalizedStatus)
 
         try {
-            if (["dispatched", "in_transit", "delivered", "canceled"].includes(normalizedStatus)) {
-                return toast.error("You can't cancel the parcel!!")
-            }
+            // if (["dispatched", "in_transit", "delivered", "canceled"].includes(normalizedStatus)) {
+            //     return toast.error("You can't cancel the parcel!!")
+            // }
 
-            const res = await cancelParcel(parcelId).unwrap()
+            const res = await confirmDeliver(parcelId).unwrap()
             console.log(res)
-            toast.success("Canceled the parcel!")
+            toast.success("Delivery confirm for the parcel!")
         } catch (error) {
-            toast.error("Couldn't cancel the parcel!")
+            toast.error("Couldn't confirm the parcel!")
         }
     }
 
@@ -55,7 +55,7 @@ export default function ReceiverParcel() {
                             {/* <TableHead>Receiver</TableHead> */}
                             <TableHead>From</TableHead>
                             <TableHead>To</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Status Logs</TableHead>
                             {/* <TableHead>Delivery Date</TableHead> */}
                             <TableHead>Created At</TableHead>
                             <TableHead>Action</TableHead>
@@ -74,15 +74,18 @@ export default function ReceiverParcel() {
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
-                                        <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
+                                        {/* <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge> */}
+                                        <ParcelStatusLogModal statusLogs={parcel?.statusLogs} currentStatus={parcel?.currentStatus} />
                                     </TableCell>
                                     {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
-                                    <TableCell><Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
-                                      {parcel.currentStatus  === "canceled" && "Canceled"}
-                                      {parcel.currentStatus  === "delivered" && "Delivered"}
-                                      {!["canceled" , "delivered"].includes(parcel.currentStatus) && "Confirm"}
-                                      </Button></TableCell>
+                                    <TableCell>
+                                        <Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
+                                            {parcel.currentStatus === "canceled" && "Canceled"}
+                                            {parcel.currentStatus === "delivered" && "Delivered"}
+                                            {!["canceled", "delivered"].includes(parcel.currentStatus) && "Confirm"}
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))
                         }
@@ -90,6 +93,8 @@ export default function ReceiverParcel() {
 
                     </TableBody>
                 </Table>
+                <div className='mt-5'>
+                </div>
 
             </div>
         </div>

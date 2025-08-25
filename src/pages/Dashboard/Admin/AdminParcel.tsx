@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
+import ParcelStatusLogModal from '../Sender/ParcelStatusLogModal'
 
 
 export default function AdminParcel() {
@@ -76,7 +77,7 @@ export default function AdminParcel() {
                             {/* <TableHead>Receiver</TableHead> */}
                             <TableHead>From</TableHead>
                             <TableHead>To</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Status Logs</TableHead>
                             {/* <TableHead>Delivery Date</TableHead> */}
                             <TableHead>Created At</TableHead>
                             <TableHead>Action</TableHead>
@@ -93,7 +94,8 @@ export default function AdminParcel() {
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
-                                        <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
+                                        {/* <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge> */}
+                                        <ParcelStatusLogModal statusLogs={parcel?.statusLogs} currentStatus={parcel?.currentStatus}/>
                                     </TableCell>
                                     <TableCell>{parcel.createdAt}</TableCell>
                                     <TableCell className="space-x-3 flex">

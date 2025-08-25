@@ -13,33 +13,51 @@ import { Package, User } from "lucide-react"
 
 export const data = () => {
   const { data: user } = useGetProfileQuery()
-  console.log(user)
+  const role = user?.data?.role
 
-  return {
-    user: {
-      name: user?.data?.fullName,
-      email: user?.data?.email,
-      avatar: "/avatars/shadcn.jpg",
-    },
-    navMain: [
+  // Role wise navigation
+  const navLinks: Record<string, any[]> = {
+    admin: [
       {
         title: "Dashboard",
-        url: `/dashboard/${user?.data?.role}`,
+        url: "/dashboard/admin",
         icon: IconDashboard,
       },
       {
         title: "Parcel",
-        url: `/dashboard/parcel/${user?.data?.role}`,
+        url: "/dashboard/parcel/admin",
         icon: Package,
       },
       {
         title: "User",
-        url: `/dashboard/user`,
+        url: "/dashboard/user",
         icon: User,
+      },
+      // {
+      //   title: "Delivery History",
+      //   url: "/dashboard/deliver-history",
+      //   icon: Package,
+      // },
+      {
+        title: "Visit Site",
+        url: "/",
+        icon: IconWebhook,
+      },
+    ],
+    sender: [
+      {
+        title: "Dashboard",
+        url: "/dashboard/sender",
+        icon: IconDashboard,
+      },
+      {
+        title: "Send Parcel",
+        url: "/dashboard/parcel/sender",
+        icon: Package,
       },
       {
         title: "Delivery History",
-        url: `/dashboard/deliver-history`,
+        url: "/dashboard/deliver-history",
         icon: Package,
       },
       {
@@ -47,10 +65,38 @@ export const data = () => {
         url: "/",
         icon: IconWebhook,
       },
-
     ],
+    receiver: [
+      {
+        title: "Dashboard",
+        url: "/dashboard/receiver",
+        icon: IconDashboard,
+      },
+      {
+        title: "My Parcels",
+        url: "/dashboard/parcel/receiver",
+        icon: Package,
+      },
+      {
+        title: "Delivery History",
+        url: "/dashboard/deliver-history",
+        icon: Package,
+      },
+      {
+        title: "Visit Site",
+        url: "/",
+        icon: IconWebhook,
+      },
+    ],
+  }
 
-
+  return {
+    user: {
+      name: user?.data?.fullName,
+      email: user?.data?.email,
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: navLinks[role || ""] || [],
     navSecondary: [
       {
         title: "Settings",

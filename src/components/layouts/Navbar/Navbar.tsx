@@ -2,9 +2,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, Package, X } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router"
-import { useLogoutMutation } from "@/redux/features/auth/auth.api"
+import { useLogoutMutation, authApi } from "@/redux/features/auth/auth.api"
 import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
 import { toast } from "sonner"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "@/redux/store"
 
 // Separate pages
 const pageLinks = [
@@ -24,6 +26,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
   const [logout] = useLogoutMutation()
   const { data: profileData, isLoading, refetch } = useGetProfileQuery(undefined,{
     refetchOnFocus: true,
@@ -38,8 +41,9 @@ export default function Navbar() {
     try {
       await logout().unwrap()
       toast.success("Logged out successfully!")
+      // Reset the auth API state to clear cached data
+      dispatch(authApi.util.resetApiState())
       navigate('/')
-      refetch()
     } catch (err) {
       toast.error("Logout failed!")
     }

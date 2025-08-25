@@ -53,7 +53,7 @@ export default function SenderParcel() {
                             <TableHead>Fee</TableHead>
                             <TableHead>From</TableHead>
                             <TableHead>To</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Status Logs</TableHead>
                             <TableHead>Created At</TableHead>
                             <TableHead>Action</TableHead>
                         </TableRow>

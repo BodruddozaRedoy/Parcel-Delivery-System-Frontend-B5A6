@@ -1,21 +1,40 @@
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
-import { DataTable } from '@/components/data-table'
 import { SectionCards } from '@/components/section-cards'
-import data from '@/assets/data.json'
+import { useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useGetProfileQuery } from '@/redux/features/auth/auth.api'
 
 
 
 export default function DashboardPage() {
+    const {data:userData} = useGetProfileQuery()
+    const user = userData?.data 
+    console.log(user)
+    const {data:receiverData} = useGetIncomingParcelsQuery(undefined, {
+        skip: user?.role !== "receiver"
+    })
+    const {data:adminData} = useGetAllParcelsQuery(undefined, {
+        skip: user?.role !== "admin"
+    })
+    const {data:senderData} = useGetMyParcelsQuery(undefined, {
+        skip: user?.role !== "sender"
+    })
+
+    const receiverParcel = receiverData?.data
+    const adminParcel = adminData?.data
+    const senderParcel = senderData?.data
+    // console.log("adminParcel", adminParcel)
+    // console.log("receiverParcel", receiverParcel)
+
     return (
         <div>
             <div className="flex flex-1 flex-col">
                 <div className="@container/main flex flex-1 flex-col gap-2">
                     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                        <SectionCards />
+                        <SectionCards data={adminParcel || senderParcel || receiverParcel}/>
                         <div className="px-4 lg:px-6">
                             <ChartAreaInteractive />
                         </div>
-                        <DataTable data={data} />
+                        {/* <DataTable data={data} /> */}
                     </div>
                 </div>
             </div>

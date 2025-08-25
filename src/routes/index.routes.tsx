@@ -13,6 +13,7 @@ import { createBrowserRouter } from "react-router";
 import AdminParcel from "@/pages/Dashboard/Admin/AdminParcel";
 import UserPage from "@/pages/Dashboard/Admin/UserPage";
 import DeliveryHistory from "@/pages/Dashboard/Receiver/DeliveryHistory";
+import demo from "@/pages/demo";
 
 export const router = createBrowserRouter([
     {
@@ -82,5 +83,9 @@ export const router = createBrowserRouter([
     {
         path: "/animation",
         Component: animation
+    },
+    {
+        path: "/demo",
+        Component: demo
     }
 ])

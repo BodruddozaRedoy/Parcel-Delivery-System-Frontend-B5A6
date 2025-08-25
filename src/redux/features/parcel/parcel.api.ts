@@ -17,7 +17,7 @@ export const parcelApi = createApi({
   tagTypes: ["Parcel"],
   endpoints: (builder) => ({
     // Sender endpoints
-    createParcel: builder.mutation<ApiResponse<Parcel>, CreateParcelRequest>({
+    createParcel: builder.mutation({
       query: (parcelData) => ({
         url: "/",
         method: "POST",
@@ -26,7 +26,7 @@ export const parcelApi = createApi({
       invalidatesTags: ["Parcel"],
     }),
 
-    getMyParcels: builder.query<PaginatedApiResponse<Parcel>, void>({
+    getMyParcels: builder.query({
       query: () => ({ url: "/my-parcels", method: "GET" }),
       // providesTags: (result) =>
       //   result
