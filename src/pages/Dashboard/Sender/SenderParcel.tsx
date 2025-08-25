@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
 import { useCancelParcelMutation, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import {
@@ -12,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
+import ParcelStatusLogModal from './ParcelStatusLogModal'
 
 
 export default function SenderParcel() {
@@ -51,12 +51,9 @@ export default function SenderParcel() {
                             <TableHead>Type</TableHead>
                             <TableHead>Weight</TableHead>
                             <TableHead>Fee</TableHead>
-                            {/* <TableHead>Sender</TableHead> */}
-                            {/* <TableHead>Receiver</TableHead> */}
                             <TableHead>From</TableHead>
                             <TableHead>To</TableHead>
                             <TableHead>Status</TableHead>
-                            {/* <TableHead>Delivery Date</TableHead> */}
                             <TableHead>Created At</TableHead>
                             <TableHead>Action</TableHead>
                         </TableRow>
@@ -69,14 +66,12 @@ export default function SenderParcel() {
                                     <TableCell>{parcel.type}</TableCell>
                                     <TableCell>{parcel?.weight}Kg</TableCell>
                                     <TableCell>${parcel.fee}</TableCell>
-                                    {/* <TableCell>{parcel.sender}</TableCell> */}
-                                    {/* <TableCell>{parcel.receiver}</TableCell> */}
                                     <TableCell>{parcel.fromAddress}</TableCell>
                                     <TableCell>{parcel.toAddress}</TableCell>
                                     <TableCell>
-                                        <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
+
+                                        <ParcelStatusLogModal statusLogs={parcel?.statusLogs} currentStatus={parcel?.currentStatus} />
                                     </TableCell>
-                                    {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
                                     <TableCell><Button disabled={parcel.currentStatus === "canceled"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-red-500 text-red-500' variant={"outline"} size={"sm"}>Cancel</Button></TableCell>
                                 </TableRow>

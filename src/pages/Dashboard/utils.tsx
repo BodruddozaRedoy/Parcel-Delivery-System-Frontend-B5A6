@@ -1,20 +1,12 @@
 import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
 import {
-  IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
-  IconFileAi,
-  IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
   IconWebhook,
 } from "@tabler/icons-react"
 import { Package, User } from "lucide-react"
