@@ -21,15 +21,7 @@ export default function ReceiverParcel() {
     console.log("parcels", parcels?.data)
 
     const handleCancelParcel = async (parcelId: string) => {
-        // console.log("status", status)
-        // const normalizedStatus = status?.trim().toLowerCase()
-        // console.log("normalized:", normalizedStatus)
-
         try {
-            // if (["dispatched", "in_transit", "delivered", "canceled"].includes(normalizedStatus)) {
-            //     return toast.error("You can't cancel the parcel!!")
-            // }
-
             const res = await confirmDeliver(parcelId).unwrap()
             console.log(res)
             toast.success("Delivery confirm for the parcel!")

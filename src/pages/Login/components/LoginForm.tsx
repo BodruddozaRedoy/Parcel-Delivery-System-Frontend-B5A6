@@ -105,12 +105,12 @@ export function LoginForm({
                 )}
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full gradient-hero hover-glow" disabled={isLoading}>
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" className="w-full" type="button">
+                {/* <Button variant="outline" className="w-full gradient-hero hover-glow" type="button">
                   Login with Google
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className="mt-4 text-center text-sm">

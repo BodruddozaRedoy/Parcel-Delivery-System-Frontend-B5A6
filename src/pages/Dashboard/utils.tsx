@@ -55,11 +55,11 @@ export const data = () => {
         url: "/dashboard/parcel/sender",
         icon: Package,
       },
-      {
-        title: "Delivery History",
-        url: "/dashboard/deliver-history",
-        icon: Package,
-      },
+      // {
+      //   title: "Delivery History",
+      //   url: "/dashboard/deliver-history",
+      //   icon: Package,
+      // },
       {
         title: "Visit Site",
         url: "/",

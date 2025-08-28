@@ -53,12 +53,13 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
+        <Link to={"/"}>
         <div className="flex items-center space-x-2">
           <Package className="h-8 w-8 text-primary" />
           <span className="text-2xl font-bold gradient-hero bg-clip-text text-transparent">
             SwiftShip
           </span>
-        </div>
+        </div></Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6">

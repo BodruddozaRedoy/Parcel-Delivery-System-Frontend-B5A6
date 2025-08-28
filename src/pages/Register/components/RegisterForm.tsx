@@ -127,12 +127,12 @@ export function RegisterForm({
                 )}
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full gradient-hero hover-glow" disabled={isLoading}>
                   {isLoading ? "Creating account..." : "Create Account"}
                 </Button>
-                <Button variant="outline" className="w-full" type="button">
+                {/* <Button variant="outline" className="w-full gradient-hero hover-glow" type="button">
                   Sign up with Google
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
