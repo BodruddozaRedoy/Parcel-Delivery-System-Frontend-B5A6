@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
 import { useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
     Table,
     TableBody,
@@ -14,7 +15,7 @@ import {
 
 export default function DeliveryHistory() {
 
-    const { data: parcels } = useGetIncomingParcelsQuery(undefined)
+    const { data: parcels, isLoading } = useGetIncomingParcelsQuery(undefined)
     console.log("parcels", parcels?.data)
 
     const updatedParcels = parcels?.data?.filter((prev: any) => prev.currentStatus === "delivered")
@@ -44,26 +45,31 @@ export default function DeliveryHistory() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {
-                            updatedParcels?.map((parcel: Parcel, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="">{parcel.trackingId}</TableCell>
-                                    <TableCell>{parcel.type}</TableCell>
-                                    <TableCell>{parcel?.weight}Kg</TableCell>
-                                    <TableCell>${parcel.fee}</TableCell>
-                                    <TableCell>{parcel.fromAddress}</TableCell>
-                                    <TableCell>{parcel.toAddress}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
-                                    </TableCell>
-                                    <TableCell>{parcel.createdAt}</TableCell>
-
-
+                        {isLoading && (
+                            Array.from({ length: 8 }).map((_, r) => (
+                                <TableRow key={`hist-skel-${r}`}>
+                                    {Array.from({ length: 8 }).map((_, c) => (
+                                        <TableCell key={`hist-skel-${r}-${c}`}>
+                                            <Skeleton className="h-4 w-24" />
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             ))
-                        }
-
-
+                        )}
+                        {!isLoading && updatedParcels?.map((parcel: Parcel, index: number) => (
+                            <TableRow key={index}>
+                                <TableCell className="">{parcel.trackingId}</TableCell>
+                                <TableCell>{parcel.type}</TableCell>
+                                <TableCell>{parcel?.weight}Kg</TableCell>
+                                <TableCell>${parcel.fee}</TableCell>
+                                <TableCell>{parcel.fromAddress}</TableCell>
+                                <TableCell>{parcel.toAddress}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge>
+                                </TableCell>
+                                <TableCell>{parcel.createdAt}</TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
 

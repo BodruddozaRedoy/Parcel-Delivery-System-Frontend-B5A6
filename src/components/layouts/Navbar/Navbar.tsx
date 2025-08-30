@@ -6,6 +6,7 @@ import { useLogoutMutation, authApi } from "@/redux/features/auth/auth.api"
 import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
 import { toast } from "sonner"
 import { useDispatch } from "react-redux"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { AppDispatch } from "@/redux/store"
 
 // Separate pages
@@ -87,7 +88,12 @@ export default function Navbar() {
 
         {/* Buttons */}
         <div className="flex items-center space-x-3">
-          {profileData ? (
+          {isLoading ? (
+            <>
+              <Skeleton className="h-9 w-20 hidden md:block" />
+              <Skeleton className="h-9 w-28" />
+            </>
+          ) : profileData ? (
             <>
               <Button variant="ghost" className="hidden md:inline-flex" onClick={handleLogout}>
                 Logout

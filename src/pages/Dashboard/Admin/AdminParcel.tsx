@@ -14,7 +14,7 @@ import type {
 
 export default function AdminParcel() {
 
-    const { data: parcels } = useGetAllParcelsQuery(undefined)
+    const { data: parcels, isLoading } = useGetAllParcelsQuery(undefined)
     const [toggleBlock] = useToggleParcelBlockMutation()
     console.log("parcels", parcels?.data)
 
@@ -122,6 +122,7 @@ export default function AdminParcel() {
                 <ParcelTable
                     columns={columns}
                     data={parcels?.data || []}
+                    isLoading={isLoading}
                     searchableColumns={["trackingId", "type", "fromAddress", "toAddress"]}
                     filterableColumns={[
                         {

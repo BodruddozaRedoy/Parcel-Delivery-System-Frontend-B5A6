@@ -3,7 +3,7 @@ import AboutPage from "@/pages/About/AboutPage";
 import animation from "@/pages/animation";
 import ContactPage from "@/pages/Contact/ContactPage";
 import DashboardPage from "@/pages/Dashboard/components/DashboardPage";
-import DashboardLayout from "@/layouts/DashboardLayout";
+import ProtectedDashboardLayout from "@/layouts/ProtectedDashboardLayout";
 import ReceiverParcel from "@/pages/Dashboard/Receiver/ReceiverParcel";
 import SenderParcel from "@/pages/Dashboard/Sender/SenderParcel";
 import HomePage from "@/pages/Home/HomePage";
@@ -14,6 +14,16 @@ import AdminParcel from "@/pages/Dashboard/Admin/AdminParcel";
 import UserPage from "@/pages/Dashboard/Admin/UserPage";
 import DeliveryHistory from "@/pages/Dashboard/Receiver/DeliveryHistory";
 import demo from "@/pages/demo";
+import {
+  AdminDashboardRoute,
+  ReceiverDashboardRoute,
+  SenderDashboardRoute,
+  AdminParcelRoute,
+  SenderParcelRoute,
+  ReceiverParcelRoute,
+  AdminUserRoute,
+  ReceiverDeliveryHistoryRoute,
+} from "@/routes/role-routes";
 
 export const router = createBrowserRouter([
     {
@@ -44,40 +54,16 @@ export const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        Component: DashboardLayout,
+        Component: ProtectedDashboardLayout,
         children: [
-            {
-                path: "sender",
-                Component: DashboardPage
-            },
-            {
-                path: "receiver",
-                Component: DashboardPage
-            },
-            {
-                path: "admin",
-                Component: DashboardPage
-            },
-            {
-                path: 'parcel/sender',
-                Component: SenderParcel
-            },
-            {
-                path: "parcel/receiver",
-                Component: ReceiverParcel
-            },
-            {
-                path: "parcel/admin",
-                Component: AdminParcel
-            },
-            {
-                path: "user",
-                Component: UserPage
-            },
-            {
-                path: "deliver-history",
-                Component: DeliveryHistory
-            }
+            { path: "sender", Component: SenderDashboardRoute },
+            { path: "receiver", Component: ReceiverDashboardRoute },
+            { path: "admin", Component: AdminDashboardRoute },
+            { path: "parcel/sender", Component: SenderParcelRoute },
+            { path: "parcel/receiver", Component: ReceiverParcelRoute },
+            { path: "parcel/admin", Component: AdminParcelRoute },
+            { path: "user", Component: AdminUserRoute },
+            { path: "deliver-history", Component: ReceiverDeliveryHistoryRoute }
         ]
     },
     {

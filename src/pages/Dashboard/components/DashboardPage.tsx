@@ -1,4 +1,4 @@
-import { ChartAreaInteractive } from '@/components/chart-area-interactive'
+import ParcelAnalytics from '@/components/analytics/parcel-analytics'
 import { SectionCards } from '@/components/section-cards'
 import { useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import { useGetProfileQuery } from '@/redux/features/auth/auth.api'
@@ -22,6 +22,7 @@ export default function DashboardPage() {
     const receiverParcel = receiverData?.data
     const adminParcel = adminData?.data
     const senderParcel = senderData?.data
+    const parcels = adminParcel || senderParcel || receiverParcel || []
     // console.log("adminParcel", adminParcel)
     // console.log("receiverParcel", receiverParcel)
 
@@ -30,10 +31,8 @@ export default function DashboardPage() {
             <div className="flex flex-1 flex-col">
                 <div className="@container/main flex flex-1 flex-col gap-2">
                     <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                        <SectionCards data={adminParcel || senderParcel || receiverParcel}/>
-                        <div className="px-4 lg:px-6">
-                            <ChartAreaInteractive />
-                        </div>
+                        <SectionCards data={parcels}/>
+                        <ParcelAnalytics data={parcels} />
                         {/* <DataTable data={data} /> */}
                     </div>
                 </div>

@@ -12,7 +12,7 @@ import type {
 
 export default function SenderParcel() {
 
-    const { data: parcels } = useGetMyParcelsQuery(undefined)
+    const { data: parcels, isLoading } = useGetMyParcelsQuery(undefined)
     const [cancelParcel] = useCancelParcelMutation()
     const {data} = useGetReceiverUsersQuery(undefined)
     console.log(data?.data, "receivers")
@@ -110,6 +110,7 @@ export default function SenderParcel() {
                 <ParcelTable
                     columns={columns}
                     data={parcels?.data || []}
+                    isLoading={isLoading}
                     searchableColumns={["trackingId", "type", "fromAddress", "toAddress"]}
                     filterableColumns={[
                         {

@@ -22,11 +22,12 @@ import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
 import { useGetAllUsersQuery, useToggleUserBlockMutation } from '@/redux/features/auth/auth.api'
+import { Skeleton } from '@/components/ui/skeleton'
 
 
 export default function UserPage() {
 
-    const { data: users } = useGetAllUsersQuery({page:1, limit:20})
+    const { data: users, isLoading } = useGetAllUsersQuery({page:1, limit:20})
 
     const [toggleBlock] = useToggleUserBlockMutation()
     const [updateParcelStatus] = useUpdateParcelStatusMutation()
@@ -82,37 +83,43 @@ export default function UserPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {
-                            users?.data?.map((user: User, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="">{index+1}</TableCell>
-                                    <TableCell>{user.fullName}</TableCell>
-                                    <TableCell>{user?.email}</TableCell>
-                                    <TableCell>{user.phone}</TableCell>
-                                    <TableCell>{user.role}</TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">{user.status}</Badge>
-                                    </TableCell>
-                                    <TableCell>{user.createdAt}</TableCell>
-
-                                    {/* <TableCell>{parcel.createdAt}</TableCell> */}
-                                    
-                                    <TableCell>
-                                        <Button
-                                            onClick={() => handleBlockParcel(user._id, user?.isBlocked)}
-                                            className="border border-red-500 text-red-500"
-                                            variant={"outline"}
-                                            size={"sm"}
-                                        >
-                                            {user?.isBlocked ? "Unblock" : "Block"}
-                                        </Button>
-                                    </TableCell>
-
+                        {isLoading && (
+                            Array.from({ length: 8 }).map((_, r) => (
+                                <TableRow key={`user-skel-${r}`}>
+                                    {Array.from({ length: 8 }).map((_, c) => (
+                                        <TableCell key={`user-skel-${r}-${c}`}>
+                                            <Skeleton className="h-4 w-24" />
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             ))
-                        }
+                        )}
 
+                        {!isLoading && users?.data?.map((user: User, index: number) => (
+                            <TableRow key={index}>
+                                <TableCell className="">{index+1}</TableCell>
+                                <TableCell>{user.fullName}</TableCell>
+                                <TableCell>{user?.email}</TableCell>
+                                <TableCell>{user.phone}</TableCell>
+                                <TableCell>{user.role}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">{user.status}</Badge>
+                                </TableCell>
+                                <TableCell>{user.createdAt}</TableCell>
 
+                                <TableCell>
+                                    <Button
+                                        onClick={() => handleBlockParcel(user._id, user?.isBlocked)}
+                                        className="border border-red-500 text-red-500"
+                                        variant={"outline"}
+                                        size={"sm"}
+                                    >
+                                        {user?.isBlocked ? "Unblock" : "Block"}
+                                    </Button>
+                                </TableCell>
+
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
 

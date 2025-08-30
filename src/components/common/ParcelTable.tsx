@@ -44,6 +44,7 @@ interface ParcelTableProps<TData, TValue> {
   searchableColumns?: string[]
   filterableColumns?: { id: string; title: string; options: { label: string; value: string }[] }[]
   initialHiddenColumns?: string[]
+  isLoading?: boolean
 }
 
 export function ParcelTable<TData, TValue>({
@@ -52,6 +53,7 @@ export function ParcelTable<TData, TValue>({
   searchableColumns = [],
   filterableColumns = [],
   initialHiddenColumns = [],
+  isLoading = false,
 }: ParcelTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -194,7 +196,20 @@ export function ParcelTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              // Skeleton rows while loading
+              Array.from({ length: 8 }).map((_, rIdx) => (
+                <TableRow key={`skeleton-${rIdx}`}>
+                  {table.getAllLeafColumns().map((col, cIdx) => (
+                    <TableCell key={`skeleton-cell-${rIdx}-${cIdx}`}>
+                      <div className="flex items-center gap-2">
+                        <div className="bg-accent/80 animate-pulse h-4 w-24 rounded" />
+                      </div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

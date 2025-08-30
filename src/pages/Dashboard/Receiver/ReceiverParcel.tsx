@@ -9,7 +9,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 export default function ReceiverParcel() {
 
-    const { data: parcels } = useGetIncomingParcelsQuery(undefined)
+    const { data: parcels, isLoading } = useGetIncomingParcelsQuery(undefined)
     const [confirmDeliver] = useConfirmDeliveryMutation()
     console.log("parcels", parcels?.data)
 
@@ -65,6 +65,7 @@ export default function ReceiverParcel() {
                 <ParcelTable
                     columns={columns}
                     data={parcels?.data || []}
+                    isLoading={isLoading}
                     searchableColumns={["trackingId", "type", "fromAddress", "toAddress"]}
                     filterableColumns={[
                         {
