@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/sidebar"
 import { Package } from "lucide-react"
 import { Link } from "react-router"
-import { data } from "@/pages/Dashboard/utils"
+import { useDashboardData } from "@/pages/Dashboard/utils"
 
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
+  const d = useDashboardData()
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -42,12 +42,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data().navMain} />
+        <NavMain items={d.navMain} />
         {/* <NavDocuments items={data().documents} /> */}
-        <NavSecondary items={data().navSecondary} className="mt-auto" />
+        <NavSecondary items={d.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data().user} />
+        <NavUser user={d.user} />
       </SidebarFooter>
     </Sidebar>
   )

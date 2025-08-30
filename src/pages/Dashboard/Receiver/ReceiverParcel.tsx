@@ -18,7 +18,7 @@ export default function ReceiverParcel() {
             const res = await confirmDeliver(parcelId).unwrap()
             console.log(res)
             toast.success("Delivery confirm for the parcel!")
-        } catch (error) {
+        } catch {
             toast.error("Couldn't confirm the parcel!")
         }
     }

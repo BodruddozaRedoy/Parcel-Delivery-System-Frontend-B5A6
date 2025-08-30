@@ -20,10 +20,17 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterRequest>()
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterRequest>()
   const [registerUser, { isLoading }] = useRegisterMutation()
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+
+  const isApiError = (err: unknown): err is { data?: { message?: string } } => {
+    return (
+      typeof err === 'object' && err !== null && 'data' in err &&
+      typeof (err as { data?: unknown }).data === 'object'
+    )
+  }
 
   const onSubmit = async (data: RegisterRequest) => {
     try {
@@ -31,8 +38,11 @@ export function RegisterForm({
       await registerUser(data).unwrap()
       toast.success("Registration successful! Please login.")
       navigate('/login', { state: { message: 'Registration successful! Please login.' } })
-    } catch (err: any) {
-      setError(err.data?.message || 'Registration failed')
+    } catch (err: unknown) {
+      const message = isApiError(err) && typeof err.data?.message === 'string'
+        ? err.data?.message
+        : 'Registration failed'
+      setError(message || 'Registration failed')
     }
   }
 

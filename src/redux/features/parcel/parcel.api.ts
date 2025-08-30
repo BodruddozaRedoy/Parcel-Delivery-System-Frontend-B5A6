@@ -1,17 +1,10 @@
-import type {
-  ApiResponse,
-  CreateParcelRequest,
-  PaginatedApiResponse,
-  Parcel,
-  ParcelStats,
-  UpdateParcelStatusRequest,
-} from "@/types/index.types";
+import type { ApiResponse, Parcel, ParcelStats, UpdateParcelStatusRequest } from "@/types/index.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const parcelApi = createApi({
   reducerPath: "parcelApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/parcels",
+    baseUrl: `${import.meta.env.VITE_BACKEND_URL}/parcels`,
     credentials: "include",
   }),
   tagTypes: ["Parcel"],

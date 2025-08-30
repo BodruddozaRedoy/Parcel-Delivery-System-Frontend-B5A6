@@ -61,7 +61,7 @@ export default function UpdateParcelStatusModal({
       toast.success("Status updated successfully!")
       form.reset()
       setOpen(false)
-    } catch (error) {
+    } catch {
       toast.error("Failed to update status!")
     }
   }

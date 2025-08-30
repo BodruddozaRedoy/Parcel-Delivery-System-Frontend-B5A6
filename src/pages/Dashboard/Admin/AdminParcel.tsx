@@ -1,6 +1,5 @@
-import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleParcelBlockMutation } from '@/redux/features/parcel/parcel.api'
+import { useGetAllParcelsQuery, useToggleParcelBlockMutation } from '@/redux/features/parcel/parcel.api'
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
@@ -27,7 +26,7 @@ export default function AdminParcel() {
             } else {
                 toast.success("Unblocked the parcel!")
             }
-        } catch (error) {
+        } catch {
             toast.error("Couldn't cancel the parcel!")
         }
     }

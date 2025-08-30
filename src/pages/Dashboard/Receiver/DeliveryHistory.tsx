@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
-import { useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useGetIncomingParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
     Table,
@@ -18,7 +18,7 @@ export default function DeliveryHistory() {
     const { data: parcels, isLoading } = useGetIncomingParcelsQuery(undefined)
     console.log("parcels", parcels?.data)
 
-    const updatedParcels = parcels?.data?.filter((prev: any) => prev.currentStatus === "delivered")
+    const updatedParcels = parcels?.data?.filter((prev: Parcel) => prev.currentStatus === "delivered")
 
 
 

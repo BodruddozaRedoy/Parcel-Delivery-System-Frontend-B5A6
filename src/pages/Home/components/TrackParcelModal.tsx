@@ -79,7 +79,7 @@ export default function TrackParcelModal() {
             )}
 
             {!isFetching && parcel?.data?.statusLogs?.length ? (
-              parcel.data.statusLogs.map((log: any, index: number) => (
+              parcel.data.statusLogs.map((log: { status: string; note?: string; location?: string; timestamp?: string | number | Date }, index: number) => (
                 <div
                   key={index}
                   className="relative border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white"

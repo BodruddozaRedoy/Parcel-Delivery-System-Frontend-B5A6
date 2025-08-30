@@ -29,7 +29,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const [logout] = useLogoutMutation()
-  const { data: profileData, isLoading, refetch } = useGetProfileQuery(undefined,{
+  const { data: profileData, isLoading } = useGetProfileQuery(undefined,{
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true
@@ -45,7 +45,7 @@ export default function Navbar() {
       // Reset the auth API state to clear cached data
       dispatch(authApi.util.resetApiState())
       navigate('/')
-    } catch (err) {
+    } catch {
       toast.error("Logout failed!")
     }
   }

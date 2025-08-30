@@ -2,17 +2,11 @@ import MainLayout from "@/layouts/MainLayout";
 import AboutPage from "@/pages/About/AboutPage";
 import animation from "@/pages/animation";
 import ContactPage from "@/pages/Contact/ContactPage";
-import DashboardPage from "@/pages/Dashboard/components/DashboardPage";
 import ProtectedDashboardLayout from "@/layouts/ProtectedDashboardLayout";
-import ReceiverParcel from "@/pages/Dashboard/Receiver/ReceiverParcel";
-import SenderParcel from "@/pages/Dashboard/Sender/SenderParcel";
 import HomePage from "@/pages/Home/HomePage";
 import LoginPage from "@/pages/Login/LoginPage";
 import RegisterPage from "@/pages/Register/RegisterPage";
 import { createBrowserRouter } from "react-router";
-import AdminParcel from "@/pages/Dashboard/Admin/AdminParcel";
-import UserPage from "@/pages/Dashboard/Admin/UserPage";
-import DeliveryHistory from "@/pages/Dashboard/Receiver/DeliveryHistory";
 import demo from "@/pages/demo";
 import {
   AdminDashboardRoute,

@@ -25,10 +25,17 @@ export function LoginForm({
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
+  const isApiError = (err: unknown): err is { data?: { message?: string } } => {
+    return (
+      typeof err === 'object' && err !== null && 'data' in err &&
+      typeof (err as { data?: unknown }).data === 'object'
+    )
+  }
+
   const onSubmit = async (data: LoginRequest) => {
     try {
       setError(null)
-      const result = await loginUser(data).unwrap()
+      await loginUser(data).unwrap()
       toast.success("Logged in successfully!")
 
       // Role-based redirection
@@ -46,8 +53,11 @@ export function LoginForm({
       //     navigate('/')
       // }
       navigate("/")
-    } catch (err: any) {
-      setError(err.data?.message || 'Login failed')
+    } catch (err: unknown) {
+      const message = isApiError(err) && typeof err.data?.message === 'string'
+        ? err.data?.message
+        : 'Login failed'
+      setError(message || 'Login failed')
     }
   }
 

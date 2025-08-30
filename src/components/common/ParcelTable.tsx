@@ -38,7 +38,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { IconChevronDown, IconChevronLeft, IconChevronRight, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react"
 
-interface ParcelTableProps<TData, TValue> {
+interface ParcelTableProps<TData extends Record<string, unknown>, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   searchableColumns?: string[]
@@ -47,7 +47,7 @@ interface ParcelTableProps<TData, TValue> {
   isLoading?: boolean
 }
 
-export function ParcelTable<TData, TValue>({
+export function ParcelTable<TData extends Record<string, unknown>, TValue>({
   columns,
   data,
   searchableColumns = [],
@@ -71,9 +71,9 @@ export function ParcelTable<TData, TValue>({
   // Filter data based on global search BEFORE initializing the table
   const filteredData = React.useMemo(() => {
     if (!globalFilter) return data
-    return data.filter((row: any) => {
+    return data.filter((row) => {
       return searchableColumns.some((column) => {
-        const value = (row as any)[column]
+        const value = row[column]
         return (
           value && value.toString().toLowerCase().includes(globalFilter.toLowerCase())
         )
@@ -200,7 +200,7 @@ export function ParcelTable<TData, TValue>({
               // Skeleton rows while loading
               Array.from({ length: 8 }).map((_, rIdx) => (
                 <TableRow key={`skeleton-${rIdx}`}>
-                  {table.getAllLeafColumns().map((col, cIdx) => (
+                  {Array.from({ length: table.getAllLeafColumns().length }).map((_, cIdx) => (
                     <TableCell key={`skeleton-cell-${rIdx}-${cIdx}`}>
                       <div className="flex items-center gap-2">
                         <div className="bg-accent/80 animate-pulse h-4 w-24 rounded" />

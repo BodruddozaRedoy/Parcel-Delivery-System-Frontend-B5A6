@@ -1,4 +1,3 @@
-import React from "react"
 import type { Parcel } from "@/types/index.types"
 import {
   Card,

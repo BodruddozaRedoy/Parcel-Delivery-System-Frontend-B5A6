@@ -79,7 +79,7 @@ export default function AddParcelModal() {
                 form.reset()
                 setOpen(false)
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong")
         }
     }

@@ -1,6 +1,5 @@
 import { Badge } from '@/components/ui/badge'
-import type { Parcel, User } from '@/types/index.types'
-import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useUpdateParcelStatusMutation } from '@/redux/features/parcel/parcel.api'
+import type { User } from '@/types/index.types'
 import {
     Table,
     TableBody,
@@ -9,15 +8,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+ 
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
@@ -30,7 +21,6 @@ export default function UserPage() {
     const { data: users, isLoading } = useGetAllUsersQuery({page:1, limit:20})
 
     const [toggleBlock] = useToggleUserBlockMutation()
-    const [updateParcelStatus] = useUpdateParcelStatusMutation()
     console.log("parcels", users?.data)
 
     const handleBlockParcel = async (userId: string, isBlocked: boolean | undefined) => {
@@ -42,25 +32,12 @@ export default function UserPage() {
             } else {
                 toast.success("Unblocked the user!")
             }
-        } catch (error) {
+        } catch {
             toast.error("Couldn't block the user!")
         }
     }
 
-    const handleUpdateParcelStatus = async (parcelId: string, status: string) => {
-        const data = {
-            status: status,
-            location: "murpur",
-            note: "muri kha"
-        }
-        try {
-            const res = await updateParcelStatus({ parcelId, data })
-            console.log(res)
-            toast.success("Status updated!")
-        } catch (error) {
-            toast.error("Something went wrong!")
-        }
-    }
+    
 
     return (
         <div className='p-5'>

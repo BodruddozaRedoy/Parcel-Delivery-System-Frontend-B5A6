@@ -11,12 +11,18 @@ import {
 } from "@tabler/icons-react"
 import { Package, User } from "lucide-react"
 
-export const data = () => {
+export type NavItem = {
+  title: string
+  url: string
+  icon: React.ComponentType<{ className?: string }>
+}
+
+export const useDashboardData = () => {
   const { data: user } = useGetProfileQuery()
   const role = user?.data?.role
 
   // Role wise navigation
-  const navLinks: Record<string, any[]> = {
+  const navLinks: Record<string, NavItem[]> = {
     admin: [
       {
         title: "Dashboard",
@@ -92,8 +98,8 @@ export const data = () => {
 
   return {
     user: {
-      name: user?.data?.fullName,
-      email: user?.data?.email,
+      name: user?.data?.fullName ?? "",
+      email: user?.data?.email ?? "",
       avatar: "/avatars/shadcn.jpg",
     },
     navMain: navLinks[role || ""] || [],

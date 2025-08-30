@@ -32,7 +32,7 @@ export default function SenderParcel() {
             const res = await cancelParcel(parcelId).unwrap()
             console.log(res)
             toast.success("Canceled the parcel!")
-        } catch (error) {
+        } catch {
             toast.error("Couldn't cancel the parcel!")
         }
     }

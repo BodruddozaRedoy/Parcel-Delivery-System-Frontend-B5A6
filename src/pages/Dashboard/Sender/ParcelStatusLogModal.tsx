@@ -12,8 +12,8 @@ export default function ParcelStatusLogModal({
   statusLogs,
   currentStatus,
 }: {
-  statusLogs: any
-  currentStatus: any
+  statusLogs: { status: string; note?: string; location?: string; timestamp?: string | number | Date }[]
+  currentStatus: string
 }) {
   return (
     <div>
@@ -37,7 +37,7 @@ export default function ParcelStatusLogModal({
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
-            {statusLogs?.map((log: any, index: number) => (
+            {statusLogs?.map((log, index: number) => (
               <div
                 key={index}
                 className="relative border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white"

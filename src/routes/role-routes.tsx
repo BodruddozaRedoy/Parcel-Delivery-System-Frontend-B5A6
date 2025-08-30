@@ -1,4 +1,3 @@
-import React from 'react'
 import ProtectedRoute from '@/routes/ProtectedRoute'
 import DashboardPage from '@/pages/Dashboard/components/DashboardPage'
 import SenderParcel from '@/pages/Dashboard/Sender/SenderParcel'
