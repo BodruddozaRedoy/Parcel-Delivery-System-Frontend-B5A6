@@ -1,19 +1,15 @@
 import { Badge } from '@/components/ui/badge'
 import type { Parcel } from '@/types/index.types'
 import { useCancelParcelMutation, useGetAllParcelsQuery, useGetIncomingParcelsQuery, useGetMyParcelsQuery, useToggleParcelBlockMutation } from '@/redux/features/parcel/parcel.api'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
 // import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
 import ParcelStatusLogModal from '../Sender/ParcelStatusLogModal'
 import UpdateParcelStatusModal from './UpdateParcelStatusModal'
+import { ParcelTable } from '@/components/common/ParcelTable'
+import type {
+  ColumnDef,
+} from "@tanstack/react-table"
 
 
 export default function AdminParcel() {
@@ -36,79 +32,113 @@ export default function AdminParcel() {
         }
     }
 
+    // Define columns for the ParcelTable
+    const columns: ColumnDef<Parcel>[] = [
+        {
+            accessorKey: "trackingId",
+            header: "Tracking ID",
+        },
+        {
+            accessorKey: "type",
+            header: "Type",
+        },
+        {
+            accessorKey: "weight",
+            header: "Weight",
+            cell: ({ row }) => <div>{row.original.weight}Kg</div>,
+        },
+        {
+            accessorKey: "fee",
+            header: "Fee",
+            cell: ({ row }) => <div>${row.original.fee}</div>,
+        },
+        {
+            accessorKey: "fromAddress",
+            header: "From",
+        },
+        {
+            accessorKey: "toAddress",
+            header: "To",
+        },
+        {
+            accessorKey: "currentStatus",
+            header: "Status",
+        },
+        {
+            id: "statusLogs",
+            header: "Status Logs",
+            cell: ({ row }) => (
+                <ParcelStatusLogModal
+                    statusLogs={row.original.statusLogs}
+                    currentStatus={row.original.currentStatus}
+                />
+            ),
+        },
+        {
+            accessorKey: "createdAt",
+            header: "Created At",
+        },
+        {
+            id: "updateStatus",
+            header: "Update Status",
+            cell: ({ row }) => (
+                <UpdateParcelStatusModal
+                    parcelId={row.original._id}
+                    currentStatus={row.original.currentStatus}
+                >
+                    <Button
+                        disabled={row.original.currentStatus === "canceled" || row.original.currentStatus === "delivered"}
+                        variant="outline"
+                        size="sm"
+                    >
+                        Update Status
+                    </Button>
+                </UpdateParcelStatusModal>
+            ),
+        },
+        {
+            id: "block",
+            header: "Block",
+            cell: ({ row }) => (
+                <Button
+                    disabled={row.original.currentStatus === "canceled" || row.original.currentStatus === "delivered"}
+                    onClick={() => handleBlockParcel(row.original._id, row.original.isBlocked)}
+                    className="border border-red-500 text-red-500"
+                    variant={"outline"}
+                    size={"sm"}
+                >
+                    {row.original?.isBlocked ? "Unblock" : "Block"}
+                </Button>
+            ),
+        },
+    ];
+
     return (
         <div className='p-5'>
             <div className='mb-3'>
                 {/* <AddParcelModal /> */}
             </div>
             <div className='border rounded-lg overflow-hidden p-5'>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Tracking ID</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Weight</TableHead>
-                            <TableHead>Fee</TableHead>
-                            {/* <TableHead>Sender</TableHead> */}
-                            {/* <TableHead>Receiver</TableHead> */}
-                            <TableHead>From</TableHead>
-                            <TableHead>To</TableHead>
-                            <TableHead>Status Logs</TableHead>
-                            {/* <TableHead>Delivery Date</TableHead> */}
-                            <TableHead>Created At</TableHead>
-                            <TableHead>Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                <ParcelTable
+                    columns={columns}
+                    data={parcels?.data || []}
+                    searchableColumns={["trackingId", "type", "fromAddress", "toAddress"]}
+                    filterableColumns={[
                         {
-                            parcels?.data?.map((parcel: Parcel, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="">{parcel.trackingId}</TableCell>
-                                    <TableCell>{parcel.type}</TableCell>
-                                    <TableCell>{parcel?.weight}Kg</TableCell>
-                                    <TableCell>${parcel.fee}</TableCell>
-                                    <TableCell>{parcel.fromAddress}</TableCell>
-                                    <TableCell>{parcel.toAddress}</TableCell>
-                                    <TableCell>
-                                        {/* <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge> */}
-                                        <ParcelStatusLogModal statusLogs={parcel?.statusLogs} currentStatus={parcel?.currentStatus}/>
-                                    </TableCell>
-                                    <TableCell>{parcel.createdAt}</TableCell>
-                                    <TableCell className="space-x-3 flex">
-                                        {/* Update Status */}
-                                        <UpdateParcelStatusModal
-                                            parcelId={parcel._id}
-                                            currentStatus={parcel.currentStatus}
-                                        >
-                                            <Button
-                                                disabled={parcel.currentStatus === "canceled" || parcel.currentStatus === "delivered"}
-                                                variant="outline"
-                                                size="sm"
-                                            >
-                                                Update Status
-                                            </Button>
-                                        </UpdateParcelStatusModal>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button
-                                            disabled={parcel.currentStatus === "canceled" || parcel.currentStatus === "delivered"}
-                                            onClick={() => handleBlockParcel(parcel._id, parcel.isBlocked)}
-                                            className="border border-red-500 text-red-500"
-                                            variant={"outline"}
-                                            size={"sm"}
-                                        >
-                                            {parcel?.isBlocked ? "Unblock" : "Block"}
-                                        </Button>
-                                    </TableCell>
-
-                                </TableRow>
-                            ))
-                        }
-
-
-                    </TableBody>
-                </Table>
-
+                            id: "currentStatus",
+                            title: "Status",
+                            options: [
+                                { label: "Requested", value: "requested" },
+                                { label: "Approved", value: "approved" },
+                                { label: "Dispatched", value: "dispatched" },
+                                { label: "In Transit", value: "in_transit" },
+                                { label: "Delivered", value: "delivered" },
+                                { label: "Canceled", value: "canceled" },
+                            ],
+                        },
+                    ]}
+                    initialHiddenColumns={["currentStatus"]}
+                />
             </div>
         </div>
     )

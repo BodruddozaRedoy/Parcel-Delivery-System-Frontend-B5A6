@@ -1,17 +1,10 @@
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useConfirmDeliveryMutation, useGetIncomingParcelsQuery, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import { useConfirmDeliveryMutation, useGetIncomingParcelsQuery } from '@/redux/features/parcel/parcel.api'
 import { Button } from '@/components/ui/button'
-// import AddParcelModal from './AddParcelModal'
 import { toast } from 'sonner'
 import ParcelStatusLogModal from '../Sender/ParcelStatusLogModal'
+import { ParcelTable } from '@/components/common/ParcelTable'
+import type { ColumnDef } from '@tanstack/react-table'
 
 
 export default function ReceiverParcel() {
@@ -30,64 +23,65 @@ export default function ReceiverParcel() {
         }
     }
 
+    // Define columns for the ParcelTable
+    const columns: ColumnDef<Parcel>[] = [
+        { accessorKey: 'trackingId', header: 'Tracking ID' },
+        { accessorKey: 'type', header: 'Type' },
+        { accessorKey: 'weight', header: 'Weight', cell: ({ row }) => <div>{row.original.weight}Kg</div> },
+        { accessorKey: 'fee', header: 'Fee', cell: ({ row }) => <div>${row.original.fee}</div> },
+        { accessorKey: 'fromAddress', header: 'From' },
+        { accessorKey: 'toAddress', header: 'To' },
+        { accessorKey: 'currentStatus', header: 'Status' },
+        {
+            id: 'statusLogs',
+            header: 'Status Logs',
+            cell: ({ row }) => (
+                <ParcelStatusLogModal statusLogs={row.original.statusLogs} currentStatus={row.original.currentStatus} />
+            ),
+        },
+        { accessorKey: 'createdAt', header: 'Created At' },
+        {
+            id: 'action',
+            header: 'Action',
+            cell: ({ row }) => (
+                <Button
+                    disabled={row.original.currentStatus !== 'in_transit'}
+                    onClick={() => handleCancelParcel(row.original._id)}
+                    className='border border-green-500 text-green-500'
+                    variant={'outline'}
+                    size={'sm'}
+                >
+                    {row.original.currentStatus === 'canceled' && 'Canceled'}
+                    {row.original.currentStatus === 'delivered' && 'Delivered'}
+                    {!['canceled', 'delivered'].includes(row.original.currentStatus) && 'Confirm'}
+                </Button>
+            ),
+        },
+    ]
+
     return (
         <div className='p-5'>
-            <div className='mb-3'>
-                {/* <AddParcelModal /> */}
-            </div>
             <div className='border rounded-lg overflow-hidden p-5'>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Tracking ID</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Weight</TableHead>
-                            <TableHead>Fee</TableHead>
-                            {/* <TableHead>Sender</TableHead> */}
-                            {/* <TableHead>Receiver</TableHead> */}
-                            <TableHead>From</TableHead>
-                            <TableHead>To</TableHead>
-                            <TableHead>Status Logs</TableHead>
-                            {/* <TableHead>Delivery Date</TableHead> */}
-                            <TableHead>Created At</TableHead>
-                            <TableHead>Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
+                <ParcelTable
+                    columns={columns}
+                    data={parcels?.data || []}
+                    searchableColumns={["trackingId", "type", "fromAddress", "toAddress"]}
+                    filterableColumns={[
                         {
-                            parcels?.data?.map((parcel: Parcel, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="">{parcel.trackingId}</TableCell>
-                                    <TableCell>{parcel.type}</TableCell>
-                                    <TableCell>{parcel?.weight}Kg</TableCell>
-                                    <TableCell>${parcel.fee}</TableCell>
-                                    {/* <TableCell>{parcel.sender}</TableCell> */}
-                                    {/* <TableCell>{parcel.receiver}</TableCell> */}
-                                    <TableCell>{parcel.fromAddress}</TableCell>
-                                    <TableCell>{parcel.toAddress}</TableCell>
-                                    <TableCell>
-                                        {/* <Badge variant="outline">{parcel?.currentStatus?.toLocaleUpperCase()}</Badge> */}
-                                        <ParcelStatusLogModal statusLogs={parcel?.statusLogs} currentStatus={parcel?.currentStatus} />
-                                    </TableCell>
-                                    {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
-                                    <TableCell>{parcel.createdAt}</TableCell>
-                                    <TableCell>
-                                        <Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
-                                            {parcel.currentStatus === "canceled" && "Canceled"}
-                                            {parcel.currentStatus === "delivered" && "Delivered"}
-                                            {!["canceled", "delivered"].includes(parcel.currentStatus) && "Confirm"}
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        }
-
-
-                    </TableBody>
-                </Table>
-                <div className='mt-5'>
-                </div>
-
+                            id: "currentStatus",
+                            title: "Status",
+                            options: [
+                                { label: "Requested", value: "requested" },
+                                { label: "Approved", value: "approved" },
+                                { label: "Dispatched", value: "dispatched" },
+                                { label: "In Transit", value: "in_transit" },
+                                { label: "Delivered", value: "delivered" },
+                                { label: "Canceled", value: "canceled" },
+                            ],
+                        },
+                    ]}
+                    initialHiddenColumns={["currentStatus"]}
+                />
             </div>
         </div>
     )
