@@ -9,9 +9,11 @@
     }
   ],
   "buildCommand": "npm run build",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://parcel-management-system-b5-a5.vercel.app/api/:path*" }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
-

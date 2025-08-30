@@ -12,6 +12,15 @@ export default defineConfig({
     },
   },
   server: {
-    port: 6565
+    port: 6565,
+    proxy: {
+      "/api": {
+        target: "https://parcel-management-system-b5-a5.vercel.app",
+        changeOrigin: true,
+        secure: true,
+        cookieDomainRewrite: "localhost",
+        cookiePathRewrite: "/",
+      },
+    },
   }
 })

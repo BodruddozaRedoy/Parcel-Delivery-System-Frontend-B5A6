@@ -16,7 +16,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_BACKEND_URL}/users`,
+    baseUrl: `/api/v1/users`,
     credentials: "include", // Include cookies in requests
   }),
   tagTypes: ["User"],
