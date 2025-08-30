@@ -72,7 +72,7 @@ export default function ReceiverParcel() {
                                     {/* <TableCell>{parcel.deliveryDate}</TableCell> */}
                                     <TableCell>{parcel.createdAt}</TableCell>
                                     <TableCell>
-                                        <Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id, parcel.currentStatus)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
+                                        <Button disabled={parcel.currentStatus !== "in_transit"} onClick={() => handleCancelParcel(parcel._id)} className='border border-green-500 text-green-500' variant={"outline"} size={"sm"}>
                                             {parcel.currentStatus === "canceled" && "Canceled"}
                                             {parcel.currentStatus === "delivered" && "Delivered"}
                                             {!["canceled", "delivered"].includes(parcel.currentStatus) && "Confirm"}

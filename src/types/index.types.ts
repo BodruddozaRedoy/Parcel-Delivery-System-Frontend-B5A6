@@ -29,6 +29,7 @@ export interface User {
 }
 
 export interface CreateParcelRequest {
+  sender?:string
   type: string;
   weight: number;
   fee: number;

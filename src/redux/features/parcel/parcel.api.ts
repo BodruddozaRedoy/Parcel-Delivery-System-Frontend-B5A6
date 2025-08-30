@@ -74,12 +74,7 @@ export const parcelApi = createApi({
       query: () => ({
         url: "/",
         method: "GET",
-        // params: { page, limit, search },
       }),
-      // providesTags: (result) =>
-      //   result
-      //     ? [...result.data.map(({ _id }) => ({ type: 'Parcel' as const, id: _id })), 'Parcel']
-      //     : ['Parcel'],
       providesTags: ["Parcel"],
     }),
 
@@ -92,6 +87,9 @@ export const parcelApi = createApi({
       providesTags: (result) =>
         result ? [{ type: "Parcel", id: result.data._id }] : [],
     }),
+    getReceiverUsers: builder.query({
+      query: () => ({ url: `/receivers`, method: "GET" }),
+    }),
 
     updateParcelStatus: builder.mutation<
       ApiResponse<Parcel>,
@@ -102,7 +100,6 @@ export const parcelApi = createApi({
         method: "PATCH",
         body: data,
       }),
-      // invalidatesTags: (result, error, { parcelId }) => [{ type: 'Parcel', id: parcelId }],
       invalidatesTags: ["Parcel"],
     }),
 
@@ -118,9 +115,9 @@ export const parcelApi = createApi({
       invalidatesTags: ["Parcel"],
     }),
     toggleParcelBlock: builder.mutation({
-      query: (parcelId) => ({ 
-        url: `/toggle/block/${parcelId}`, 
-        method: "PATCH" 
+      query: (parcelId) => ({
+        url: `/toggle/block/${parcelId}`,
+        method: "PATCH",
       }),
       // invalidatesTags: (result, error, parcelId) => [{ type: 'Parcel', id: parcelId }],
       invalidatesTags: ["Parcel"],
@@ -142,5 +139,6 @@ export const {
   useUpdateParcelStatusMutation,
   useToggleParcelStatusMutation,
   useDeleteParcelMutation,
-  useToggleParcelBlockMutation
+  useToggleParcelBlockMutation,
+  useGetReceiverUsersQuery,
 } = parcelApi;

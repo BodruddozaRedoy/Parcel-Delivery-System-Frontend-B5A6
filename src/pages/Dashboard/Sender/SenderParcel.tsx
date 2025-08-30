@@ -1,5 +1,5 @@
 import type { Parcel } from '@/types/index.types'
-import { useCancelParcelMutation, useGetMyParcelsQuery } from '@/redux/features/parcel/parcel.api'
+import { useCancelParcelMutation, useGetMyParcelsQuery, useGetReceiverUsersQuery } from '@/redux/features/parcel/parcel.api'
 import {
     Table,
     TableBody,
@@ -18,7 +18,10 @@ export default function SenderParcel() {
 
     const { data: parcels } = useGetMyParcelsQuery(undefined)
     const [cancelParcel] = useCancelParcelMutation()
-    console.log("parcels", parcels?.data)
+    const {data} = useGetReceiverUsersQuery(undefined)
+    console.log(data?.data, "receivers")
+
+    // console.log("parcels", parcels?.data)
 
     const handleCancelParcel = async (parcelId: string, status: string) => {
         console.log("status", status)
@@ -37,6 +40,8 @@ export default function SenderParcel() {
             toast.error("Couldn't cancel the parcel!")
         }
     }
+
+
 
     return (
         <div className='p-5'>

@@ -18,23 +18,36 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { useCreateParcelMutation } from "@/redux/features/parcel/parcel.api"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { useCreateParcelMutation, useGetReceiverUsersQuery } from "@/redux/features/parcel/parcel.api"
 import { useGetProfileQuery } from "@/redux/features/auth/auth.api"
-import type { Parcel } from "@/types/index.types"
+import type { CreateParcelRequest, User } from "@/types/index.types"
 import { toast } from "sonner"
 import { useState } from "react"
 
-
-type ParcelFormValues = Omit<Parcel, "_id" | "statusLogs" | "createdAt" | "updatedAt">
+type ParcelFormValues = CreateParcelRequest & {
+    receiver: CreateParcelRequest["receiver"] & { _id?: string }
+}
 
 export default function AddParcelModal() {
     const [addParcel] = useCreateParcelMutation()
     const { data: user } = useGetProfileQuery()
     const [open, setOpen] = useState(false)
+    const { data:users } = useGetReceiverUsersQuery(undefined)
+    const receiverUsers = users?.data as User[] | undefined
+    const [isOtherSelected, setIsOtherSelected] = useState(false)
+
     const form = useForm<ParcelFormValues>({
         defaultValues: {
             type: "",
             weight: 0,
+            sender: "",
             fee: 0,
             receiver: {
                 name: "",
@@ -48,6 +61,17 @@ export default function AddParcelModal() {
     const onSubmit = async (data: ParcelFormValues) => {
         console.log("Form Submitted:", data)
         try {
+            // Ensure receiver._id is populated before submit, if user selected from list
+            if (!data.receiver._id && data.receiver.phone) {
+                const selectedUser = receiverUsers?.find((u: User) => u.phone === data.receiver.phone)
+                if (selectedUser) {
+                    data = {
+                        ...data,
+                        receiver: { ...data.receiver, _id: selectedUser._id }
+                    }
+                }
+            }
+
             const res = await addParcel(data).unwrap()
             console.log(res)
             if (res.success) {
@@ -141,37 +165,81 @@ export default function AddParcelModal() {
                         {/* Receiver */}
                         <FormField
                             control={form.control}
-                            name="receiver"
+                            name="receiver.phone"
                             render={({ field }) => (
-                                <div className="space-y-2">
-                                    <FormItem>
-                                        <FormLabel>Receiver Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Jane Smith"
-                                                value={field.value.name}
-                                                onChange={(e) =>
-                                                    field.onChange({ ...field.value, name: e.target.value })
+                                <FormItem>
+                                    <FormLabel>Receiver Phone</FormLabel>
+                                    <Select
+                                        onValueChange={(value) => {
+                                            field.onChange(value)
+                                            // Check if "Other" option is selected
+                                            if (value === "other") {
+                                                setIsOtherSelected(true)
+                                                form.setValue("receiver.name", "")
+                                            } else {
+                                                setIsOtherSelected(false)
+                                                // Find the selected user and auto-fill the name
+                                                const selectedUser = receiverUsers?.find((user: User) => user.phone === value)
+                                                if (selectedUser) {
+                                                    form.setValue("receiver.name", selectedUser.fullName)
+                                                    // Also store receiver's _id so backend can use it
+                                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                                    // @ts-ignore - receiver._id is optional in our form type
+                                                    form.setValue("receiver._id", selectedUser._id)
                                                 }
-                                            />
+                                            }
+                                        }}
+                                        value={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select receiver phone or type manually" />
+                                            </SelectTrigger>
                                         </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                        <SelectContent>
+                                            {receiverUsers?.map((user: User) => (
+                                                <SelectItem key={user._id} value={user.phone}>
+                                                    {user.phone} - {user.fullName}
+                                                </SelectItem>
+                                            ))}
+                                            {/* <SelectItem value="other">Other (Type manually)</SelectItem> */}
+                                        </SelectContent>
+                                    </Select>
+                                    
+                                    {/* Manual input field for "Other" option */}
+                                    {isOtherSelected && (
+                                        <Input
+                                            placeholder="+8801XXXXXXXXX"
+                                            className="mt-2"
+                                            value={field.value === "other" ? "" : field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value)
+                                                // Also update the form value directly to ensure it's captured
+                                                form.setValue("receiver.phone", e.target.value)
+                                            }}
+                                        />
+                                    )}
+                                    
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                                    <FormItem>
-                                        <FormLabel>Receiver Phone</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="+8801XXXXXXXXX"
-                                                value={field.value.phone}
-                                                onChange={(e) =>
-                                                    field.onChange({ ...field.value, phone: e.target.value })
-                                                }
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                </div>
+                        <FormField
+                            control={form.control}
+                            name="receiver.name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Receiver Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                        readOnly
+                                            placeholder="Receiver Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
                             )}
                         />
 
