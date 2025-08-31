@@ -12,7 +12,7 @@ export const parcelApi = createApi({
     // Sender endpoints
     createParcel: builder.mutation({
       query: (parcelData) => ({
-        url: "/",
+        url: "",
         method: "POST",
         body: parcelData,
       }),
@@ -45,8 +45,9 @@ export const parcelApi = createApi({
     // Public endpoints
     trackParcel: builder.query<ApiResponse<Parcel>, string>({
       query: (trackingId) => ({ url: `/track/${trackingId}`, method: "GET" }),
-      providesTags: (result) =>
-        result ? [{ type: "Parcel", id: result.data._id }] : [],
+      // providesTags: (result) =>
+      //   result ? [{ type: "Parcel", id: result.data._id }] : [],
+      providesTags: ["Parcel"]
     }),
 
     // Parcel actions
@@ -65,7 +66,7 @@ export const parcelApi = createApi({
     // Admin endpoints
     getAllParcels: builder.query({
       query: () => ({
-        url: "/",
+        url: "",
         method: "GET",
       }),
       providesTags: ["Parcel"],

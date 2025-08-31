@@ -31,7 +31,6 @@ export default function AdminParcel() {
         }
     }
 
-    // Define columns for the ParcelTable
     const columns: ColumnDef<Parcel>[] = [
         {
             accessorKey: "trackingId",

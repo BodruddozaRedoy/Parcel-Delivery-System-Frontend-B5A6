@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "parcel-delivery-system-frontend-b5a6",
   "builds": [
     {
       "src": "package.json",
@@ -10,10 +9,13 @@
   ],
   "buildCommand": "npm run build",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://parcel-management-system-b5-a5.vercel.app/api/:path*" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://parcel-management-system-b5-a5.vercel.app/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
