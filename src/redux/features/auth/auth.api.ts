@@ -19,7 +19,7 @@ export const authApi = createApi({
     baseUrl: `/api/v1/users`,
     credentials: "include", // Include cookies in requests
   }),
-  
+
   tagTypes: ["User"],
   endpoints: (builder) => ({
     register: builder.mutation<ApiResponse<User>, RegisterRequest>({
@@ -82,7 +82,7 @@ export const authApi = createApi({
       { page?: number; limit?: number; search?: string; role?: string }
     >({
       query: ({ page = 1, limit = 10, search, role }) => ({
-        url: "/",
+        url: "",
         method: "GET",
         params: { page, limit, search, role },
         credentials: "include", // Include cookies in this request
